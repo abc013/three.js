@@ -7,6 +7,9 @@ export const typeToLengthLib = {
 	vec3: 3,
 	vec4: 4,
 	color: 4,
+	mat2: 1,
+	mat3: 1,
+	mat4: 1,
 	// cpu
 	String: 1,
 	Number: 1,
@@ -41,6 +44,9 @@ export const typeToColorLib = {
 	vec3: '#0000ff',
 	vec4: '#0000ff',
 	color: '#00ffff',
+	mat2: '#70d030',
+	mat3: '#70d030',
+	mat4: '#70d030',
 	// cpu
 	String: '#ff0000',
 	Number: '#eeeeee',
