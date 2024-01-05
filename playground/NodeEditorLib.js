@@ -19,6 +19,7 @@ import { JoinEditor } from './editors/JoinEditor.js';
 import { StringEditor } from './editors/StringEditor.js';
 import { FileEditor } from './editors/FileEditor.js';
 import { CustomNodeEditor } from './editors/CustomNodeEditor.js';
+import { GroupEditor } from './editors/GroupEditor.js';
 
 export const ClassLib = {
 	BasicMaterialEditor,
@@ -40,7 +41,8 @@ export const ClassLib = {
 	FileEditor,
 	ScriptableEditor,
 	PreviewEditor,
-	NodePrototypeEditor
+	NodePrototypeEditor,
+	GroupEditor
 };
 
 let nodeList = null;

@@ -1976,6 +1976,11 @@
 					"name": "Scriptable",
 					"icon": "variable",
 					"editorClass": "ScriptableEditor"
+				},
+				{
+					"name": "Group",
+					"icon": "forms",
+					"editorClass": "GroupEditor"
 				}
 			]
 		},
