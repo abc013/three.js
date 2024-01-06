@@ -1981,6 +1981,11 @@
 					"name": "Group",
 					"icon": "forms",
 					"editorClass": "GroupEditor"
+				},
+				{
+					"name": "Group Prototype",
+					"icon": "components",
+					"editorClass": "GroupPrototypeEditor"
 				}
 			]
 		},
