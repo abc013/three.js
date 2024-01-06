@@ -11,7 +11,7 @@ Element.icons.unlink = 'ti ti-unlink';
 
 export class NodeEditor extends THREE.EventDispatcher {
 
-	constructor( scene = null, renderer = null, composer = null ) {
+	constructor( scene = null, renderer = null, composer = null, startParameterless = false ) {
 
 		super();
 
@@ -54,8 +54,9 @@ export class NodeEditor extends THREE.EventDispatcher {
 		this._initNodesContext();
 		this._initExamplesContext();
 		this._initShortcuts();
-		this._initParams();
 
+		if (!startParameterless)
+			this._initParams();
 	}
 
 	setSize( width, height ) {
