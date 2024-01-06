@@ -4,11 +4,9 @@ import { setOutputAestheticsFromType } from '../DataTypeLib.js';
 
 export class GroupInputEditor extends BaseNodeEditor {
 
-	constructor(parentGroupEditor) {
+	constructor() {
 
 		super( 'Group Inputs', null, 300 );
-
-        this.parentGroupEditor = parentGroupEditor;
 
 		const button = new ButtonInput( "Add Input" ).onClick( () => {
 
@@ -23,6 +21,12 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		this.currentElementID = 0;
 	}
+
+    attachGroupEditor( editor ) {
+
+        this.parentGroupEditor = editor;
+
+    }
 
 	addParameterFromJSON( json ) {
 		// TODO: maybe, we have to outsource this element into its own class later. We'll see.
@@ -61,7 +65,8 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		element.attributeName = name;
 		element.attributeType = type;
-		element.attributeID = id; // TODO: necessary? might come in handy when saving?
+		element.attributeID = id;
+		element.attributeValue = inputNodeLib[ type ]();
 
 		setOutputAestheticsFromType( element, type );
 
@@ -116,6 +121,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 	}
 
 	generateElementsJSON() {
+
 		var elements = []
 
 		for ( const element of this.elements.concat() ) {
@@ -129,12 +135,13 @@ export class GroupInputEditor extends BaseNodeEditor {
 		}
 
 		return elements;
+
 	}
 
 	requestGroupPrototypeUpdate() {
-		console.log("[NodeIn] Group Prototype needs refresh!");
 
-		this.parentGroupEditor.setInputs( this.generateElementsJSON() );
+		if (this.parentGroupEditor) this.parentGroupEditor.setInputs( this.generateElementsJSON() );
+
 	}
 
 	invalidate() {

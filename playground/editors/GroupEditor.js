@@ -12,8 +12,14 @@ export class GroupEditor extends BaseNodeEditor {
 
 		super( 'Group', null, 350 );
 
-        this.inputEditor = new GroupInputEditor(this);
-        this.outputEditor = new GroupOutputEditor(this); // TODO: how do we save these?
+        // For now, this is the way we create groups. But soon, we don't want to do it that way, but rather load our group from a json and then attach ourselves to in- and outputs.
+        this.inputEditor = new GroupInputEditor();
+        this.outputEditor = new GroupOutputEditor();
+
+        this.inputEditor.attachGroupEditor(this);
+        this.outputEditor.attachGroupEditor(this);
+
+        this.updateOutputs();
 	}
 
     setEditor( editor ) {
@@ -30,10 +36,12 @@ export class GroupEditor extends BaseNodeEditor {
         groupEditor.add( this.inputEditor );
         groupEditor.add( this.outputEditor );*/
 
-        editor.add( this.inputEditor );
-        editor.add( this.outputEditor );
+        if ( editor != null ) {
 
-        this.updateOutputs();
+            editor.add( this.inputEditor );
+            editor.add( this.outputEditor );
+
+        }
     }
 
     updateOutputs() {
@@ -48,11 +56,9 @@ export class GroupEditor extends BaseNodeEditor {
 		// JSON layout: { id: <id>, name: <name>, type: <type> }
         const { id, name, type } = json;
 
-        const input = new LabelElement(name).setInput(1);
-
 		const { element, inputNode } = createElementFromJSON( {
-			inputType: type,
-			inputConnection: false
+            name: name,
+			inputType: type
 		} );
 
         // there has to be a corresponding field in the inputEditor elements
@@ -64,8 +70,8 @@ export class GroupEditor extends BaseNodeEditor {
 
         const updateInput = () => {
 
-            input.setEnabledInputs( ! input.getLinkedObject() );
-            inputEditorElement.attributeValue = input.getLinkedObject() ?? inputNode;
+            element.setEnabledInputs( ! element.getLinkedObject() );
+            inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
 
             this.inputEditor.invalidate();
 
@@ -73,13 +79,10 @@ export class GroupEditor extends BaseNodeEditor {
 
         inputEditorElement.attributeValue = inputNode;
 
-        input.onConnect( () => updateInput(), true );
-
-        input.add( element );
-
+        element.onConnect( () => updateInput(), true );
 		element.addEventListener( 'changeInput', () => this.invalidate() );
 
-        this.add( input );
+        this.add( element );
     }
 
     setInputs( elements ) {
@@ -113,8 +116,8 @@ export class GroupEditor extends BaseNodeEditor {
 
         super.dispose();
 
-        this.inputEditor.dispose();
-        this.outputEditor.dispose();
+        //this.inputEditor.dispose();
+        //this.outputEditor.dispose();
     }
 
 }
