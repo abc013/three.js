@@ -20,6 +20,8 @@ import { StringEditor } from './editors/StringEditor.js';
 import { FileEditor } from './editors/FileEditor.js';
 import { CustomNodeEditor } from './editors/CustomNodeEditor.js';
 import { GroupEditor } from './editors/GroupEditor.js';
+import { GroupInputEditor } from './editors/GroupInputEditor.js';
+import { GroupOutputEditor } from './editors/GroupOutputEditor.js';
 import { GroupPrototypeEditor } from './editors/GroupPrototypeEditor.js';
 
 export const ClassLib = {
@@ -44,6 +46,8 @@ export const ClassLib = {
 	PreviewEditor,
 	NodePrototypeEditor,
 	GroupEditor,
+	GroupInputEditor,
+	GroupOutputEditor,
 	GroupPrototypeEditor
 };
 
