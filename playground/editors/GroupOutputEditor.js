@@ -10,13 +10,16 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 		const { element, inputNode } = createElementFromJSON( {
             name: 'Output',
-			inputType: inputType
+			inputType: inputType,
+            inputConnection: false
 		} );
+
+        element.setInput(1); // TODO: somehow, using inputConnection == true doesn't work, but this does...
 
         this.inputNode = inputNode;
         this.input = element;
         
-        element.onConnect( this.updateConnection(), true );
+        element.onConnect( () => this.updateConnection(), true );
 
         this.value = inputNode;
         element.addEventListener( 'changeInput', () => this.invalidate() );

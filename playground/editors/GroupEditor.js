@@ -57,8 +57,11 @@ export class GroupEditor extends BaseNodeEditor {
 
 		const { element, inputNode } = createElementFromJSON( {
             name: name,
-			inputType: type
+			inputType: type,
+            inputConnection: false
 		} );
+
+        element.setInput(1); // TODO: somehow, using inputConnection == true doesn't work, but this does...
 
         // there has to be a corresponding field in the inputEditor elements
         const inputEditorElement = this.inputEditor.elements.find( ( obj ) => {
