@@ -13,6 +13,8 @@ export class GroupEditor extends BaseNodeEditor {
 
         // For now, this is the way we create groups. But soon, we don't want to do it that way, but rather load our group from a json and then attach ourselves to in- and outputs.
         this.inputEditor = new GroupInputEditor();
+        this.inputElementsJSON = null;
+
         this.outputEditor = new GroupOutputEditor();
 
         this.inputEditor.attachGroupEditor(this);
@@ -73,13 +75,13 @@ export class GroupEditor extends BaseNodeEditor {
         const updateInput = () => {
 
             element.setEnabledInputs( ! element.getLinkedObject() );
-            inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
+            if (inputEditorElement) inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode; // TODO: if can be removed if loading that way is removed
 
             this.inputEditor.invalidate();
 
         };
 
-        inputEditorElement.attributeValue = inputNode;
+        if (inputEditorElement) inputEditorElement.attributeValue = inputNode; // TODO: if can be removed if loading that way is removed
 
         element.onConnect( () => updateInput(), true );
 		element.addEventListener( 'changeInput', () => this.invalidate() );
@@ -96,6 +98,8 @@ export class GroupEditor extends BaseNodeEditor {
             this.addInputFromJSON( element );
 
         } );
+
+        this.inputElementsJSON = elements;
     }
 
 	clearLayout() {
@@ -122,4 +126,19 @@ export class GroupEditor extends BaseNodeEditor {
         //this.outputEditor.dispose();
     }
 
+	serialize( data ) {
+
+		super.serialize( data );
+
+		data.inputElementsJSON = this.inputElementsJSON;
+
+	}
+
+	deserialize( data ) {
+
+		this.setInputs( data.inputElementsJSON || JSON.parse( '[]' ) );
+
+		super.deserialize( data );
+
+	}
 }

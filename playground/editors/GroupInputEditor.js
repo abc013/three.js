@@ -96,12 +96,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		}
 
-		this.remove( this.buttonElement );
-		this.add( this.buttonElement );
-
-		this.elementsJSON = elementsJSON;
-
-		this.updateOutputConnection();
+		this.elementsJSON = elements;
 
 		this.requestGroupPrototypeUpdate();
 	}
@@ -159,6 +154,22 @@ export class GroupInputEditor extends BaseNodeEditor {
 			}
 
 		}
+
+	}
+
+	serialize( data ) {
+
+		super.serialize( data );
+
+		data.elementsJSON = this.generateElementsJSON();
+
+	}
+
+	deserialize( data ) {
+
+		this.useLayout( data.elementsJSON || JSON.parse( '[]' ), true );
+
+		super.deserialize( data );
 
 	}
 }
