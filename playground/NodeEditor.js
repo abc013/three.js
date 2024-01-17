@@ -11,7 +11,7 @@ Element.icons.unlink = 'ti ti-unlink';
 
 export class NodeEditor extends THREE.EventDispatcher {
 
-	constructor( scene = null, renderer = null, composer = null, startParameterless = false ) {
+	constructor( scene = null, renderer = null, composer = null, startParameterless = false, parentalNodeEditor = null ) {
 
 		super();
 
@@ -38,6 +38,7 @@ export class NodeEditor extends THREE.EventDispatcher {
 		this.domElement = domElement;
 
 		this._preview = false;
+		this._visible = true;
 
 		this.search = null;
 
@@ -49,7 +50,7 @@ export class NodeEditor extends THREE.EventDispatcher {
 
 		this._initUpload();
 		this._initTips();
-		this._initMenu();
+		this._initMenu( parentalNodeEditor );
 		this._initSearch();
 		this._initNodesContext();
 		this._initExamplesContext();
@@ -142,6 +143,32 @@ export class NodeEditor extends THREE.EventDispatcher {
 
 	}
 
+	set visible( value ) {
+
+		if ( this._visible === value ) return;
+
+		if ( value ) {
+
+			if ( this._visibleParent )
+				this._visibleParent.appendChild( this.domElement );
+
+		} else {
+
+			this._visibleParent = this.domElement.parentElement;
+			this.domElement.remove();
+
+		}
+
+		this._visible = value;
+
+	}
+
+	get visible() {
+
+		return this._visible;
+
+	}
+
 	newProject() {
 
 		const canvas = this.canvas;
@@ -223,7 +250,7 @@ export class NodeEditor extends THREE.EventDispatcher {
 
 	}
 
-	_initMenu() {
+	_initMenu( parentalNodeEditor ) {
 
 		const menu = new CircleMenu();
 		const previewMenu = new CircleMenu();
@@ -289,12 +316,31 @@ export class NodeEditor extends THREE.EventDispatcher {
 
 		} );
 
-		menu.add( previewButton )
-			.add( newButton )
-			.add( examplesButton )
-			.add( openButton )
-			.add( saveButton )
-			.add( menuButton );
+		if ( parentalNodeEditor ) {
+
+			const visibilityButton = new ButtonInput().setIcon( 'ti ti-arrows-minimize' ).setToolTip( 'Exit Editor' );
+
+			visibilityButton.onClick( () => {
+
+				this.visible = false;
+				parentalNodeEditor.visible = true;
+
+			} );
+
+			menu.add( previewButton )
+				.add( visibilityButton )
+				.add( menuButton );
+
+		} else {
+
+			menu.add( previewButton )
+				.add( newButton )
+				.add( examplesButton )
+				.add( openButton )
+				.add( saveButton )
+				.add( menuButton );
+
+		}
 
 		previewMenu.add( editorButton );
 
