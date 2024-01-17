@@ -1,9 +1,10 @@
-import { LabelElement, Element, ButtonInput, StringInput } from 'flow';
+import { LabelElement, Element, ButtonInput, StringInput, Loader } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
 import { NodeEditor } from '../NodeEditor.js';
 import { GroupInputEditor } from './GroupInputEditor.js';
 import { GroupOutputEditor } from './GroupOutputEditor.js';
 import { GroupEditor } from './GroupEditor.js';
+import { ClassLib } from '../NodeEditorLib.js';
 
 export class GroupPrototypeEditor extends BaseNodeEditor {
 
@@ -23,22 +24,6 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		
 		this.nodeEditor = null;
 		this.nodeEditorJSON = null;
-	}
-
-	serialize( data ) {
-
-		super.serialize( data );
-
-        // TODO: set group information
-
-	}
-
-	deserialize( data ) {
-
-		super.deserialize( data );
-
-        // TODO: get group information
-
 	}
 
 	deserializeLib( data, lib ) {
@@ -80,15 +65,14 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 			if ( this.nodeEditorJSON ) {
 
 				this.loadNodeEditor();
-				this.nodeEditor.visible = false;
 
 			} else {
 
 				this.createNodeEditor();
-				this.nodeEditor.visible = false;
 
 			}
 
+			this.nodeEditor.visible = false;
 		}
 
 		this.nodeEditor.visible = !this.nodeEditor.visible;
@@ -99,41 +83,56 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	createNodeEditor() {
 
-		const editor = this.editor;
+		this._createNodeEditor();
 
-        // TODO: nice, this works vaguely for now.
-        const nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
-        document.body.appendChild( nodeEditor.domElement );
-
-		this.nodeEditor = nodeEditor;
-
-		this.onWindowResize();
-		window.addEventListener( 'resize', this.onWindowResize );
-
-		var groupEditor = new GroupEditor();
+		const groupEditor = new GroupEditor();
 		this.editor.add( groupEditor );
 
         this.inputEditor = new GroupInputEditor();
         this.outputEditor = new GroupOutputEditor();
 
-		groupEditor.setInputEditor( this.inputEditor );
-		groupEditor.setOutputEditor( this.outputEditor );
+		//groupEditor.setInputEditor( this.inputEditor );
+		//groupEditor.setOutputEditor( this.outputEditor );
 
-        nodeEditor.add( this.inputEditor );
-        nodeEditor.add( this.outputEditor );
-
-	}
-
-	onWindowResize() {
-
-		const width = window.innerWidth;
-		const height = window.innerHeight;
-
-		this.nodeEditor.setSize( width, height );
+        this.nodeEditor.add( this.inputEditor );
+        this.nodeEditor.add( this.outputEditor );
 
 	}
 
 	loadNodeEditor() {
+
+		this._createNodeEditor();
+
+		const groupEditor = new GroupEditor();
+		this.editor.add( groupEditor );
+
+		const loader = new Loader( Loader.OBJECTS );
+		const json = loader.parse( this.nodeEditorJSON , ClassLib );
+
+		this.nodeEditor.loadJSON( json );
+
+	}
+
+	_createNodeEditor() {
+
+		const editor = this.editor;
+
+        const nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
+        document.body.appendChild( nodeEditor.domElement );
+
+		this.nodeEditor = nodeEditor;
+
+		const onWindowResize = () => {
+
+			const width = window.innerWidth;
+			const height = window.innerHeight;
+	
+			this.nodeEditor.setSize( width, height );
+	
+		};
+
+		onWindowResize();
+		window.addEventListener( 'resize', onWindowResize );
 
 	}
 
@@ -234,6 +233,30 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 			}
 
 		}
+
+	}
+
+	serialize( data ) {
+
+		super.serialize( data );
+
+		if (this.nodeEditor) {
+
+			data.nodeEditorJSON = JSON.stringify( this.nodeEditor.canvas.toJSON() );
+
+		}
+
+	}
+
+	deserialize( data ) {
+
+		if (data.nodeEditorJSON) {
+
+			this.nodeEditorJSON = JSON.parse( data.nodeEditorJSON );
+
+		}
+
+		super.deserialize( data );
 
 	}
 
