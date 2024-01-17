@@ -1,17 +1,28 @@
 import { LabelElement, Element, ButtonInput, StringInput } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
+import { NodeEditor } from '../NodeEditor.js';
+import { GroupInputEditor } from './GroupInputEditor.js';
+import { GroupOutputEditor } from './GroupOutputEditor.js';
+import { GroupEditor } from './GroupEditor.js';
 
 export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	constructor() {
 		super( 'Group Prototype', null, 350 );
 
-		this.nameInput = new StringInput( "New Group" );
+		this.nameInput = new StringInput( "New Group" ).onChange( () => {
 
-        var showNodes = new ButtonInput( "Show Graph" );
+			// TODO
+
+		} );
+
+        var showNodes = new ButtonInput( "Show Graph" ).onClick( () => this.toggleNodeEditor() );
 
         this.add( new LabelElement( "Name" ).add(this.nameInput) )
             .add( new Element().add(showNodes) );
+		
+		this.nodeEditor = null;
+		this.nodeEditorJSON = null;
 	}
 
 	serialize( data ) {
@@ -59,6 +70,70 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		}
 
 		this.updatePrototypes();*/
+
+	}
+
+	toggleNodeEditor() {
+
+		if ( !this.nodeEditor ) {
+
+			if ( this.nodeEditorJSON ) {
+
+				this.loadNodeEditor();
+				this.nodeEditor.visible = false;
+
+			} else {
+
+				this.createNodeEditor();
+				this.nodeEditor.visible = false;
+
+			}
+
+		}
+
+		this.nodeEditor.visible = !this.nodeEditor.visible;
+		this.editor.visible = !this.nodeEditor.visible;
+		// this.nodeEditor.preview = !this.nodeEditor.preview;
+
+	}
+
+	createNodeEditor() {
+
+		const editor = this.editor;
+
+        // TODO: nice, this works vaguely for now.
+        const nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
+        document.body.appendChild( nodeEditor.domElement );
+
+		this.nodeEditor = nodeEditor;
+
+		this.onWindowResize();
+		window.addEventListener( 'resize', this.onWindowResize );
+
+		var groupEditor = new GroupEditor();
+		this.editor.add( groupEditor );
+
+        this.inputEditor = new GroupInputEditor();
+        this.outputEditor = new GroupOutputEditor();
+
+		groupEditor.setInputEditor( this.inputEditor );
+		groupEditor.setOutputEditor( this.outputEditor );
+
+        nodeEditor.add( this.inputEditor );
+        nodeEditor.add( this.outputEditor );
+
+	}
+
+	onWindowResize() {
+
+		const width = window.innerWidth;
+		const height = window.innerHeight;
+
+		this.nodeEditor.setSize( width, height );
+
+	}
+
+	loadNodeEditor() {
 
 	}
 

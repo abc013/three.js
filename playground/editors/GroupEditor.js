@@ -11,38 +11,37 @@ export class GroupEditor extends BaseNodeEditor {
 
 		super( 'Group', null, 350 );
 
-        // For now, this is the way we create groups. But soon, we don't want to do it that way, but rather load our group from a json and then attach ourselves to in- and outputs.
-        this.inputEditor = new GroupInputEditor();
+        this.inputEditor = null;
         this.inputElementsJSON = null;
+        this.outputEditor = null;
 
-        this.outputEditor = new GroupOutputEditor();
-
-        this.inputEditor.attachGroupEditor(this);
-        this.outputEditor.attachGroupEditor(this);
-
-        this.updateOutputs();
 	}
 
-    setEditor( editor ) {
+    setInputEditor( editor ) {
 
-        super.setEditor( editor );
+        this.inputEditor = editor;
 
-        // TODO: we get it, this works.
-        /*var groupEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true );
-        var parent = document.createElement("div");
-        parent.style.cssText = "margin: 10%;";
-        parent.appendChild(groupEditor.domElement);
-        document.body.appendChild(parent);
+        if ( editor ) {
 
-        groupEditor.add( this.inputEditor );
-        groupEditor.add( this.outputEditor );*/
-
-        if ( editor != null ) {
-
-            editor.add( this.inputEditor );
-            editor.add( this.outputEditor );
+            this.inputEditor.attachGroupEditor( this );
 
         }
+
+        this.invalidate();
+
+    }
+
+    setOutputEditor( editor ) {
+
+        this.outputEditor = editor;
+
+        if ( editor ) {
+            
+            this.outputEditor.attachGroupEditor( this );
+            this.updateOutputs();
+
+        }
+
     }
 
     updateOutputs() {
