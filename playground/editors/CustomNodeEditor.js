@@ -48,7 +48,7 @@ const createElementFromProperty = ( node, property ) => {
 
 		node[ property.name ] = elmt.getLinkedObject() || defaultValue;
 
-	} );
+	}, true );
 
 	return element;
 

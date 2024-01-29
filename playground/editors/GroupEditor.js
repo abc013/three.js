@@ -1,22 +1,68 @@
-import { LabelElement } from 'flow';
+import { Loader } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
 import { createElementFromJSON } from '../NodeEditorUtils.js';
 import { GroupInputEditor } from './GroupInputEditor.js';
 import { GroupOutputEditor } from './GroupOutputEditor.js';
 import { NodeEditor } from '../NodeEditor.js';
 import { setOutputAestheticsFromNode } from '../DataTypeLib.js';
+import { ClassLib } from '../NodeEditorLib.js';
 
 export class GroupEditor extends BaseNodeEditor {
 
-	constructor() {
+	constructor( groupPrototype ) {
 
-		super( 'Group', null, 350 );
+        super( 'Group', null, 350 );
+
+        this.groupPrototype = groupPrototype;
 
         this.inputEditor = null;
         this.inputElementsJSON = null;
         this.outputEditor = null;
 
 	}
+
+	setEditor( editor ) {
+
+		super.setEditor( editor );
+
+		if ( editor !== null ) {
+
+            this.update();
+
+		}
+
+	}
+
+    update() {
+
+        this.setName( this.groupPrototype.getGroupName() );
+
+        this.nodeEditorJSON = this.groupPrototype.getNodeEditorJSON();
+
+        if (!this.nodeEditorJSON) {
+
+            this.invalidate();
+            return;
+
+        }
+
+		const editor = this.editor;
+
+        if ( !this.nodeEditor ) {
+
+            this.nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
+
+        }
+
+		const loader = new Loader( Loader.OBJECTS );
+		const json = loader.parse( this.nodeEditorJSON , ClassLib );
+
+		this.nodeEditor.loadJSON( json );
+
+        this.setInputEditor( this.nodeEditor.canvas.nodes.find( ( node ) => node instanceof GroupInputEditor ) );
+        this.setOutputEditor( this.nodeEditor.canvas.nodes.find( ( node ) => node instanceof GroupOutputEditor ) );
+
+    }
 
     setInputEditor( editor ) {
 
@@ -66,27 +112,23 @@ export class GroupEditor extends BaseNodeEditor {
         element.setInput(1); // TODO: somehow, using inputConnection == true doesn't work, but this does...
 
         // there has to be a corresponding field in the inputEditor elements
-        const inputEditorElement = this.inputEditor.elements.find( ( obj ) => {
-
-            return obj.attributeID == id;
-
-        } );
+        const inputEditorElement = this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
 
         const updateInput = () => {
 
             element.setEnabledInputs( ! element.getLinkedObject() );
-            if (inputEditorElement) inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode; // TODO: if can be removed if loading that way is removed
+            inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
 
             this.inputEditor.invalidate();
 
         };
 
-        if (inputEditorElement) inputEditorElement.attributeValue = inputNode; // TODO: if can be removed if loading that way is removed
-
         element.onConnect( () => updateInput(), true );
 		element.addEventListener( 'changeInput', () => this.invalidate() );
 
         this.add( element );
+
+        updateInput();
     }
 
     setInputs( elements ) {
@@ -116,14 +158,6 @@ export class GroupEditor extends BaseNodeEditor {
 
 		}
 
-	}
-
-    dispose() {
-
-        super.dispose();
-
-        //this.inputEditor.dispose();
-        //this.outputEditor.dispose();
     }
 
 	serialize( data ) {
