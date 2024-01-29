@@ -11,30 +11,36 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 	constructor() {
 		super( 'Group Prototype', null, 350 );
 
-		this.nameInput = new StringInput( "New Group" ).onChange( () => {
+		this.nameInput = new StringInput( "New Group" ).onChange( () => { this.updatePrototypes() } );
 
-			// TODO
-
-		} );
-
-        var showNodes = new ButtonInput( "Show Graph" ).onClick( () => this.toggleNodeEditor() );
+        var showNodes = new ButtonInput( "Show Graph" ).onClick( () => { this.toggleNodeEditor() } );
 
         this.add( new LabelElement( "Name" ).add(this.nameInput) )
             .add( new Element().add(showNodes) );
-		
+
 		this.nodeEditor = null;
 		this.nodeEditorJSON = null;
+
+		this._prototype = null;
+		this.instances = [];
+
+		this.updatePrototypes();
+	}
+
+	getGroupName() {
+
+		return this.nameInput.getValue();
+
 	}
 
 	deserializeLib( data, lib ) {
 
 		super.deserializeLib( data, lib );
 
-		/*this.source = data.source;
+		this.source = data.source;
 
-        // required for the prototype, as it seems.
 		const nodePrototype = this.createPrototype();
-		lib[ nodePrototype.name ] = nodePrototype.nodeClass;*/
+		lib[ nodePrototype.name ] = nodePrototype.nodeClass;
 
 	}
 
@@ -42,7 +48,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		super.setEditor( editor );
 
-		/*if ( editor === null ) {
+		if ( editor === null ) {
 
 			for ( const proto of [ ...this.instances ] ) {
 
@@ -54,7 +60,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		}
 
-		this.updatePrototypes();*/
+		this.updatePrototypes();
 
 	}
 
@@ -77,7 +83,8 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		this.nodeEditor.visible = !this.nodeEditor.visible;
 		this.editor.visible = !this.nodeEditor.visible;
-		// this.nodeEditor.preview = !this.nodeEditor.preview;
+
+		// if (this.editor.visible) this.updatePrototypes(); // TODO: We just closed the node editor, thus update Prototypes; However, this doesnt work from inside the editor
 
 	}
 
@@ -85,14 +92,8 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		this._createNodeEditor();
 
-		const groupEditor = new GroupEditor();
-		this.editor.add( groupEditor );
-
         this.inputEditor = new GroupInputEditor();
         this.outputEditor = new GroupOutputEditor();
-
-		//groupEditor.setInputEditor( this.inputEditor );
-		//groupEditor.setOutputEditor( this.outputEditor );
 
         this.nodeEditor.add( this.inputEditor );
         this.nodeEditor.add( this.outputEditor );
@@ -103,13 +104,13 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		this._createNodeEditor();
 
-		const groupEditor = new GroupEditor();
-		this.editor.add( groupEditor );
-
 		const loader = new Loader( Loader.OBJECTS );
 		const json = loader.parse( this.nodeEditorJSON , ClassLib );
 
 		this.nodeEditor.loadJSON( json );
+
+		this.inputEditor = this.nodeEditor.canvas.nodes.find( ( node ) => node instanceof GroupInputEditor );
+		this.outputEditor = this.nodeEditor.canvas.nodes.find( ( node ) => node instanceof GroupOutputEditor );
 
 	}
 
@@ -141,24 +142,17 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		if ( this._prototype !== null ) return this._prototype;
 
 		const nodePrototype = this;
-		const scriptableNode = this.scriptableNode;
-		const editorElement = this.editorElement;
+		// const scriptableNode = this.scriptableNode;
+		const nameInput = this.nameInput;
+		// const editorElement = this.editorElement;
 
-		const nodeClass = class extends ScriptableEditor {
+		const nodeClass = class extends GroupEditor {
 
 			constructor() {
 
-				super( scriptableNode.codeNode, false );
+				super( nodePrototype );
 
 				this.serializePriority = - 1;
-
-				this.onCode = this.onCode.bind( this );
-
-			}
-
-			onCode() {
-
-				this.update();
 
 			}
 
@@ -172,13 +166,9 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 					if ( index === - 1 ) nodePrototype.instances.push( this );
 
-					editorElement.addEventListener( 'change', this.onCode );
-
 				} else {
 
 					if ( index !== - 1 ) nodePrototype.instances.splice( index, 1 );
-
-					editorElement.removeEventListener( 'change', this.onCode );
 
 				}
 
@@ -186,7 +176,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 			get className() {
 
-				return scriptableNode.getLayout().name;
+				return nodePrototype.getGroupName();
 
 			}
 
@@ -195,12 +185,12 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		this._prototype = {
 			get name() {
 
-				return scriptableNode.getLayout().name;
+				return nodePrototype.getGroupName();
 
 			},
 			get icon() {
 
-				return scriptableNode.getLayout().icon;
+				return 'components';
 
 			},
 			nodeClass,
@@ -222,17 +212,19 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		//
 
-		const layout = this.scriptableNode.getLayout();
+		if ( this.editor ) {
 
-		if ( layout && layout.name ) {
-
-			if ( this.editor ) {
-
-				this.editor.addClass( this.createPrototype() );
-
-			}
+			this.editor.addClass( this.createPrototype() );
 
 		}
+
+		this.instances.forEach( (instance) => instance.update() );
+
+	}
+
+	getNodeEditorJSON() {
+
+		return this.nodeEditor ? this.nodeEditor.canvas.toJSON() : null; // TODO: cache, we dont need to jsonify every time
 
 	}
 
@@ -242,7 +234,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		if (this.nodeEditor) {
 
-			data.nodeEditorJSON = JSON.stringify( this.nodeEditor.canvas.toJSON() );
+			data.nodeEditorJSON = JSON.stringify( this.getNodeEditorJSON() );
 
 		}
 

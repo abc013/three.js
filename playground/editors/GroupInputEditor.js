@@ -25,6 +25,7 @@ export class GroupInputEditor extends BaseNodeEditor {
     attachGroupEditor( editor ) {
 
         this.parentGroupEditor = editor;
+		this.requestGroupPrototypeUpdate();
 
     }
 
