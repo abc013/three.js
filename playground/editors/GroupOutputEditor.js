@@ -4,49 +4,49 @@ import { createElementFromJSON, getColorFromType, onValidType } from '../NodeEdi
 export class GroupOutputEditor extends BaseNodeEditor {
 
 	constructor() {
-        const inputType = 'float';
+		const inputType = 'float';
 
 		super( 'Group Output', null, 350 );
 
 		const { element, inputNode } = createElementFromJSON( {
-            name: 'Output',
+			name: 'Output',
 			inputType: inputType,
-            inputConnection: false
+			inputConnection: false
 		} );
 
-        element.setInput(1); // TODO: somehow, using inputConnection == true doesn't work, but this does...
+		element.setInput(1); // TODO: somehow, using inputConnection == true doesn't work, but this does...
 
-        this.inputNode = inputNode;
-        this.input = element;
-        
-        element.onConnect( () => this.updateConnection(), true );
+		this.inputNode = inputNode;
+		this.input = element;
+		
+		element.onConnect( () => this.updateConnection(), true );
 
-        this.value = inputNode;
-        element.addEventListener( 'changeInput', () => this.invalidate() );
+		this.value = inputNode;
+		element.addEventListener( 'changeInput', () => this.invalidate() );
 
 		this.add( element );
 	}
 
-    attachGroupEditor( editor ) {
+	attachGroupEditor( editor ) {
 
-        this.parentGroupEditor = editor;
+		this.parentGroupEditor = editor;
 
-    }
+	}
 
-    updateConnection() {
+	updateConnection() {
 
-        this.input.setEnabledInputs( ! this.input.getLinkedObject() );
-        
-        this.value = this.input.getLinkedObject() ?? this.inputNode; // TODO: change this.value here, its misleading.
-        if (this.parentGroupEditor) this.parentGroupEditor.updateOutputs();
+		this.input.setEnabledInputs( ! this.input.getLinkedObject() );
+		
+		this.value = this.input.getLinkedObject() ?? this.inputNode; // TODO: change this.value here, its misleading.
+		if (this.parentGroupEditor) this.parentGroupEditor.updateOutputs();
 
-    }
+	}
 
-    invalidate() {
+	invalidate() {
 
-        super.invalidate();
+		super.invalidate();
 
-        if (this.parentGroupEditor) this.parentGroupEditor.invalidate();
+		if (this.parentGroupEditor) this.parentGroupEditor.invalidate();
 
-    }
+	}
 }

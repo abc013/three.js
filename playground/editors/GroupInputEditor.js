@@ -22,12 +22,12 @@ export class GroupInputEditor extends BaseNodeEditor {
 		this.currentElementID = 0;
 	}
 
-    attachGroupEditor( editor ) {
+	attachGroupEditor( editor ) {
 
-        this.parentGroupEditor = editor;
+		this.parentGroupEditor = editor;
 		this.requestGroupPrototypeUpdate();
 
-    }
+	}
 
 	addParameterFromJSON( json ) {
 		// TODO: maybe, we have to outsource this element into its own class later. We'll see.
@@ -61,8 +61,8 @@ export class GroupInputEditor extends BaseNodeEditor {
 		} );
 
 		const element = new Element().add( nameInput )
-                                     .add( typeInput )
-							         .add( removeButton );
+									 .add( typeInput )
+									 .add( removeButton );
 
 		element.attributeName = name;
 		element.attributeType = type;
