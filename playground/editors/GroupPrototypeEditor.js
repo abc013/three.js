@@ -9,14 +9,17 @@ import { ClassLib } from '../NodeEditorLib.js';
 export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	constructor() {
+
 		super( 'Group Prototype', null, 350 );
+
+		this.nodeClass = new WeakMap();
 
 		this.nameInput = new StringInput( "New Group" ).onChange( () => { this.updatePrototypes() } );
 
-        var showNodes = new ButtonInput( "Show Graph" ).onClick( () => { this.toggleNodeEditor() } );
+		var showNodes = new ButtonInput( "Show Graph" ).onClick( () => { this.toggleNodeEditor() } );
 
-        this.add( new LabelElement( "Name" ).add(this.nameInput) )
-            .add( new Element().add(showNodes) );
+		this.add( new LabelElement( "Name" ).add(this.nameInput) )
+			.add( new Element().add(showNodes) );
 
 		this.nodeEditor = null;
 		this.nodeEditorJSON = null;
@@ -25,6 +28,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		this.instances = [];
 
 		this.updatePrototypes();
+
 	}
 
 	getGroupName() {
@@ -45,6 +49,13 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 	}
 
 	setEditor( editor ) {
+
+		if ( editor === null && this.editor ) {
+
+			// TODO: also add this to NodePrototypeEditor. This is required because otherwise, classes are saved over editor instances (and save/load cycles)
+			this.editor.removeClass(this.createPrototype());
+
+		}
 
 		super.setEditor( editor );
 
@@ -92,11 +103,11 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		this._createNodeEditor();
 
-        this.inputEditor = new GroupInputEditor();
-        this.outputEditor = new GroupOutputEditor();
+		this.inputEditor = new GroupInputEditor();
+		this.outputEditor = new GroupOutputEditor();
 
-        this.nodeEditor.add( this.inputEditor );
-        this.nodeEditor.add( this.outputEditor );
+		this.nodeEditor.add( this.inputEditor );
+		this.nodeEditor.add( this.outputEditor );
 
 	}
 
@@ -118,8 +129,8 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		const editor = this.editor;
 
-        const nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
-        document.body.appendChild( nodeEditor.domElement );
+		const nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
+		document.body.appendChild( nodeEditor.domElement );
 
 		this.nodeEditor = nodeEditor;
 
@@ -142,9 +153,6 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		if ( this._prototype !== null ) return this._prototype;
 
 		const nodePrototype = this;
-		// const scriptableNode = this.scriptableNode;
-		const nameInput = this.nameInput;
-		// const editorElement = this.editorElement;
 
 		const nodeClass = class extends GroupEditor {
 
@@ -188,11 +196,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 				return nodePrototype.getGroupName();
 
 			},
-			get icon() {
-
-				return 'components';
-
-			},
+			icon: 'components',
 			nodeClass,
 			reference: this,
 			editor: this.editor
@@ -215,10 +219,9 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		if ( this.editor ) {
 
 			this.editor.addClass( this.createPrototype() );
+			this.instances.forEach( (instance) => instance.update() );
 
 		}
-
-		this.instances.forEach( (instance) => instance.update() );
 
 	}
 

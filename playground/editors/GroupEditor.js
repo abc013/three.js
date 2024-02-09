@@ -10,13 +10,13 @@ export class GroupEditor extends BaseNodeEditor {
 
 	constructor( groupPrototype ) {
 
-        super( 'Group', null, 350 );
+		super( 'Group', null, 350 );
 
-        this.groupPrototype = groupPrototype;
+		this.groupPrototype = groupPrototype;
 
-        this.inputEditor = null;
-        this.inputElementsJSON = null;
-        this.outputEditor = null;
+		this.inputEditor = null;
+		this.inputElementsJSON = null;
+		this.outputEditor = null;
 
 	}
 
@@ -26,122 +26,122 @@ export class GroupEditor extends BaseNodeEditor {
 
 		if ( editor !== null ) {
 
-            this.update();
+			this.update();
 
 		}
 
 	}
 
-    update() {
+	update() {
 
-        this.setName( this.groupPrototype.getGroupName() );
+		this.setName( this.groupPrototype.getGroupName() );
 
-        this.nodeEditorJSON = this.groupPrototype.getNodeEditorJSON();
+		this.nodeEditorJSON = this.groupPrototype.getNodeEditorJSON();
 
-        if (!this.nodeEditorJSON) {
+		if (!this.nodeEditorJSON) {
 
-            this.invalidate();
-            return;
+			this.invalidate();
+			return;
 
-        }
+		}
 
 		const editor = this.editor;
 
-        if ( !this.nodeEditor ) {
+		if ( !this.nodeEditor ) {
 
-            this.nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
+			this.nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
 
-        }
+		}
 
 		const loader = new Loader( Loader.OBJECTS );
 		const json = loader.parse( this.nodeEditorJSON , ClassLib );
 
 		this.nodeEditor.loadJSON( json );
 
-        this.setInputEditor( this.nodeEditor.canvas.nodes.find( ( node ) => node instanceof GroupInputEditor ) );
-        this.setOutputEditor( this.nodeEditor.canvas.nodes.find( ( node ) => node instanceof GroupOutputEditor ) );
+		this.setInputEditor( this.nodeEditor.canvas.nodes.find( ( node ) => node instanceof GroupInputEditor ) );
+		this.setOutputEditor( this.nodeEditor.canvas.nodes.find( ( node ) => node instanceof GroupOutputEditor ) );
 
-    }
+	}
 
-    setInputEditor( editor ) {
+	setInputEditor( editor ) {
 
-        this.inputEditor = editor;
+		this.inputEditor = editor;
 
-        if ( editor ) {
+		if ( editor ) {
 
-            this.inputEditor.attachGroupEditor( this );
+			this.inputEditor.attachGroupEditor( this );
 
-        }
+		}
 
-        this.invalidate();
+		this.invalidate();
 
-    }
+	}
 
-    setOutputEditor( editor ) {
+	setOutputEditor( editor ) {
 
-        this.outputEditor = editor;
+		this.outputEditor = editor;
 
-        if ( editor ) {
-            
-            this.outputEditor.attachGroupEditor( this );
-            this.updateOutputs();
+		if ( editor ) {
 
-        }
+			this.outputEditor.attachGroupEditor( this );
+			this.updateOutputs();
 
-    }
+		}
 
-    updateOutputs() {
+	}
 
-        this.value = this.outputEditor.value;
-        this.updateOutputConnection();
-        this.invalidate();
+	updateOutputs() {
 
-    }
+		this.value = this.outputEditor.value;
+		this.updateOutputConnection();
+		this.invalidate();
 
-    addInputFromJSON( json ) {
+	}
+
+	addInputFromJSON( json ) {
 		// JSON layout: { id: <id>, name: <name>, type: <type> }
-        const { id, name, type } = json;
+		const { id, name, type } = json;
 
 		const { element, inputNode } = createElementFromJSON( {
-            name: name,
+			name: name,
 			inputType: type,
-            inputConnection: false
+			inputConnection: false
 		} );
 
-        element.setInput(1); // TODO: somehow, using inputConnection == true doesn't work, but this does...
+		element.setInput(1); // TODO: somehow, using inputConnection == true doesn't work, but this does...
 
-        // there has to be a corresponding field in the inputEditor elements
-        const inputEditorElement = this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
+		// there has to be a corresponding field in the inputEditor elements
+		const inputEditorElement = !this.inputEditor ? null : this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
 
-        const updateInput = () => {
+		const updateInput = () => {
 
-            element.setEnabledInputs( ! element.getLinkedObject() );
-            inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
+			element.setEnabledInputs( ! element.getLinkedObject() );
+			if (inputEditorElement) inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
 
-            this.inputEditor.invalidate();
+			if (this.inputEditor) this.inputEditor.invalidate();
 
-        };
+		};
 
-        element.onConnect( () => updateInput(), true );
+		element.onConnect( () => updateInput(), true );
 		element.addEventListener( 'changeInput', () => this.invalidate() );
 
-        this.add( element );
+		this.add( element );
 
-        updateInput();
-    }
+		updateInput();
+	}
 
-    setInputs( elements ) {
+	setInputs( elements ) {
 
-        this.clearLayout();
+		this.clearLayout();
 
-        elements.forEach( (element) => {
+		elements.forEach( (element) => {
 
-            this.addInputFromJSON( element );
+			this.addInputFromJSON( element );
 
-        } );
+		} );
 
-        this.inputElementsJSON = elements;
-    }
+		this.inputElementsJSON = elements;
+	}
 
 	clearLayout() {
 
@@ -157,7 +157,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 		}
 
-    }
+	}
 
 	serialize( data ) {
 
