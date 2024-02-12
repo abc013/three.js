@@ -92,7 +92,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 	updateOutputs() {
 
-		this.value = this.outputEditor.value;
+		this.value = this.outputEditor.output;
 		this.updateOutputConnection();
 		this.invalidate();
 

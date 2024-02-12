@@ -22,6 +22,12 @@ export class GroupInputEditor extends BaseNodeEditor {
 		this.currentElementID = 0;
 	}
 
+    isRemovable() {
+
+        return false;
+
+    }
+
 	attachGroupEditor( editor ) {
 
 		this.parentGroupEditor = editor;

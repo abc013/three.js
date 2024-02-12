@@ -21,11 +21,17 @@ export class GroupOutputEditor extends BaseNodeEditor {
 		
 		element.onConnect( () => this.updateConnection(), true );
 
-		this.value = inputNode;
+		this.output = inputNode;
 		element.addEventListener( 'changeInput', () => this.invalidate() );
 
 		this.add( element );
 	}
+
+    isRemovable() {
+
+        return false;
+
+    }
 
 	attachGroupEditor( editor ) {
 
@@ -37,7 +43,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 		this.input.setEnabledInputs( ! this.input.getLinkedObject() );
 		
-		this.value = this.input.getLinkedObject() ?? this.inputNode; // TODO: change this.value here, its misleading.
+		this.output = this.input.getLinkedObject() ?? this.inputNode; // TODO: change this.value here, its misleading.
 		if (this.parentGroupEditor) this.parentGroupEditor.updateOutputs();
 
 	}
