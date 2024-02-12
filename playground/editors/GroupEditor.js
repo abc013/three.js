@@ -35,7 +35,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 	update() {
 
-		this.setName( this.groupPrototype.getGroupName() );
+		this.setName( this.groupPrototype.groupName );
 
 		this.nodeEditorJSON = this.groupPrototype.getNodeEditorJSON();
 
