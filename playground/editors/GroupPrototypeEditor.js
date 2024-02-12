@@ -47,6 +47,12 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		super.deserializeLib( data, lib );
 
+		if (data.nodeEditorJSON) {
+
+			this.nodeEditorJSON = JSON.parse( data.nodeEditorJSON );
+
+		}
+
 		this.groupName = data.groupName;
 
 		const nodePrototype = this.createPrototype();
@@ -214,6 +220,8 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	updatePrototypes() {
 
+		this.createNodeEditorJSON(true);
+
 		if ( this._prototype !== null && this._prototype.editor !== null ) {
 
 			this._prototype.editor.removeClass( this._prototype );
@@ -231,9 +239,16 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	}
 
-	getNodeEditorJSON() {
+	createNodeEditorJSON(dirty = false) {
 
-		return this.nodeEditor ? this.nodeEditor.canvas.toJSON() : null; // TODO: cache, we dont need to jsonify every time
+		if (!dirty && this.nodeEditorJSON)
+			return this.nodeEditorJSON;
+
+		if (!this.nodeEditor)
+			return null;
+		
+		this.nodeEditorJSON = this.nodeEditor.canvas.toJSON();
+		return this.nodeEditorJSON;
 
 	}
 
@@ -243,7 +258,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		if (this.nodeEditor) {
 
-			data.nodeEditorJSON = JSON.stringify( this.getNodeEditorJSON() );
+			data.nodeEditorJSON = JSON.stringify( this.createNodeEditorJSON() );
 
 		}
 
