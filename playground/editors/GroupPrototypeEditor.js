@@ -31,9 +31,15 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	}
 
-	getGroupName() {
+	get groupName() {
 
 		return this.nameInput.getValue();
+
+	}
+
+	set groupName(value) {
+
+		this.nameInput.setValue(value);
 
 	}
 
@@ -41,7 +47,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		super.deserializeLib( data, lib );
 
-		this.source = data.source;
+		this.groupName = data.groupName;
 
 		const nodePrototype = this.createPrototype();
 		lib[ nodePrototype.name ] = nodePrototype.nodeClass;
@@ -184,7 +190,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 			get className() {
 
-				return nodePrototype.getGroupName();
+				return nodePrototype.groupName;
 
 			}
 
@@ -193,7 +199,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		this._prototype = {
 			get name() {
 
-				return nodePrototype.getGroupName();
+				return nodePrototype.groupName;
 
 			},
 			icon: 'components',
@@ -241,6 +247,8 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		}
 
+		data.groupName = this.groupName;
+
 	}
 
 	deserialize( data ) {
@@ -250,6 +258,8 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 			this.nodeEditorJSON = JSON.parse( data.nodeEditorJSON );
 
 		}
+
+		this.groupName = data.groupName;
 
 		super.deserialize( data );
 
