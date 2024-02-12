@@ -93,7 +93,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 	updateOutputs() {
 
-		this.value = this.outputEditor.value;
+		this.value = this.outputEditor.output;
 		setOutputAestheticsFromNode( this.title, this.value );
 		this.invalidate();
 

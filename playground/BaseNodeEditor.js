@@ -32,11 +32,15 @@ export class BaseNodeEditor extends Node {
 
 			context.removeEventListener( 'show', onAddButtons );
 
-			context.add( new ButtonInput( 'Remove' ).setIcon( 'ti ti-trash' ).onClick( () => {
+			if ( this.isRemovable() ) {
 
-				this.dispose();
+				context.add( new ButtonInput( 'Remove' ).setIcon( 'ti ti-trash' ).onClick( () => {
 
-			} ) );
+					this.dispose();
+
+				} ) );
+
+			}
 
 			if ( this.hasJSON() ) {
 
@@ -86,6 +90,12 @@ export class BaseNodeEditor extends Node {
 		const color = getColorFromNode( this.value );
 
 		return color ? color + 'BB' : null;
+
+	}
+
+	isRemovable() {
+
+		return true;
 
 	}
 
