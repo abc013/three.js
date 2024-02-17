@@ -1909,7 +1909,7 @@ class TitleElement extends DraggableElement {
 
 }
 
-const drawLine = ( p1x, p1y, p2x, p2y, invert, size, colorA, ctx, colorB = null ) => {
+const drawLine = ( p1x, p1y, p2x, p2y, invert, size, colorA, ctx, colorB = null, baseColor = null ) => {
 
 	const dx = p2x - p1x;
 	const dy = p2y - p1y;
@@ -1924,6 +1924,22 @@ const drawLine = ( p1x, p1y, p2x, p2y, invert, size, colorA, ctx, colorB = null 
 		p2x - offset, p2y,
 		p2x, p2y
 	);
+
+	if (baseColor !== null) {
+
+		baseColor = nameToRgba(baseColor);
+		colorA = nameToRgba(colorA);
+
+		colorA = "rgba(" + ((baseColor[0] + colorA[0] * 2) / 3) + "," + ((baseColor[1] + colorA[1] * 2) / 3) + "," + ((baseColor[2] + colorA[2] * 2) / 3) + "," + ((baseColor[3] + colorA[3] * 2) / 3) + ")";
+
+		if ( colorB !== null ) {
+
+			colorB = nameToRgba(colorB);
+
+			colorB = "rgba(" + ((baseColor[0] + colorB[0] * 2) / 3) + "," + ((baseColor[1] + colorB[1] * 2) / 3) + "," + ((baseColor[2] + colorB[2] * 2) / 3) + "," + ((baseColor[3] + colorB[3] * 2) / 3) + ")";
+
+		}
+	}
 
 	if ( colorB !== null && colorA !== colorB ) {
 
@@ -1941,6 +1957,16 @@ const drawLine = ( p1x, p1y, p2x, p2y, invert, size, colorA, ctx, colorB = null 
 
 	ctx.lineWidth = size;
 	ctx.stroke();
+
+};
+
+const nameToRgba = ( name ) => {
+
+    var canvas = document.createElement('canvas');
+    var context = canvas.getContext('2d');
+    context.fillStyle = name;
+    context.fillRect(0,0,1,1);
+    return context.getImageData(0,0,1,1).data;
 
 };
 
@@ -2867,7 +2893,7 @@ class Canvas extends Serializer {
 					drawLine(
 						aPos.x * zoom, ( ( aPos.y + aPosY ) - aCenterY ) * zoom,
 						bPos.x * zoom, ( ( bPos.y + bPosY ) - bCenterY ) * zoom,
-						false, 2, colorA, drawContext, colorB
+						false, 2, colorA, drawContext, colorB, color
 					);
 
 				}
