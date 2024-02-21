@@ -1,6 +1,7 @@
 import { Element, ButtonInput, StringInput } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
 import { getColorFromType, inputNodeLib } from '../NodeEditorUtils.js';
+import { SelectInput } from '../libs/flow.module.js';
 
 export class GroupInputEditor extends BaseNodeEditor {
 
@@ -50,14 +51,30 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		} );
 	
-		const typeInput = new StringInput( type ).setReadOnly( true ).onChange( () => {
+		const types = [
+			{ name: "string", value: "string" },
+			{ name: "float", value: "float" },
+			{ name: "vec2", value: "vec2" },
+			{ name: "vec3", value: "vec3" },
+			{ name: "vec4", value: "vec4" },
+			{ name: "color", value: "color" }
+		];
 
-			element.typeInput = typeInput.getValue();
-			element.setOutputColor( getColorFromType( type ) );
+		const typeInput = new SelectInput().onChange( () => {
+
+			element.attributeType = typeInput.getValue();
+			element.attributeValue = inputNodeLib[ element.attributeType ]();
+
+			element.setOutputColor( getColorFromType( typeInput.getValue() ) );
 			element.setOutput( 1 );
+
+			// TODO: disconnect if required
+
 			this.requestGroupPrototypeUpdate();
 
-		} ); // TODO: make an options thing out of it
+		} );
+
+		typeInput.setOptions( types );
 
 		const removeButton = new ButtonInput( "Remove " ).setIcon( 'ti ti-trash' ).onClick( () => {
 
@@ -72,12 +89,9 @@ export class GroupInputEditor extends BaseNodeEditor {
 									 .add( removeButton );
 
 		element.attributeName = name;
-		element.attributeType = type;
 		element.attributeID = id;
-		element.attributeValue = inputNodeLib[ type ]();
 
-		element.setOutputColor( getColorFromType( type ) );
-		element.setOutput( 1 );
+		typeInput.setValue( type );
 
 		const getObjectCallback = () => {
 
