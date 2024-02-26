@@ -220,7 +220,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	updatePrototypes() {
 
-		this.createNodeEditorJSON(true);
+		this.createNodeEditorJSON();
 
 		if ( this._prototype !== null && this._prototype.editor !== null ) {
 
@@ -239,10 +239,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	}
 
-	createNodeEditorJSON(dirty = false) {
-
-		if (!dirty && this.nodeEditorJSON)
-			return this.nodeEditorJSON;
+	createNodeEditorJSON() {
 
 		if (!this.nodeEditor)
 			return null;
