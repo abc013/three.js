@@ -89,6 +89,8 @@ export class GroupEditor extends BaseNodeEditor {
 
 		}
 
+		this.invalidate();
+
 	}
 
 	updateOutputs() {

@@ -242,8 +242,8 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 	createNodeEditorJSON() {
 
 		if (!this.nodeEditor)
-			return null;
-		
+			return this.nodeEditorJSON;
+
 		this.nodeEditorJSON = this.nodeEditor.canvas.toJSON();
 		return this.nodeEditorJSON;
 
