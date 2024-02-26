@@ -1,7 +1,6 @@
-import { Element, ButtonInput, StringInput } from 'flow';
+import { Element, ButtonInput, StringInput, SelectInput } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
 import { getColorFromType, inputNodeLib } from '../NodeEditorUtils.js';
-import { SelectInput } from '../libs/flow.module.js';
 
 export class GroupInputEditor extends BaseNodeEditor {
 
@@ -57,13 +56,14 @@ export class GroupInputEditor extends BaseNodeEditor {
 			{ name: "vec2", value: "vec2" },
 			{ name: "vec3", value: "vec3" },
 			{ name: "vec4", value: "vec4" },
-			{ name: "color", value: "color" }
+			{ name: "color", value: "color" },
+			{ name: "anything", value: "node" }
 		];
 
 		const typeInput = new SelectInput().onChange( () => {
 
 			element.attributeType = typeInput.getValue();
-			element.attributeValue = inputNodeLib[ element.attributeType ]();
+			element.attributeValue = element.attributeType in inputNodeLib ? inputNodeLib[ element.attributeType ]() : null;
 
 			element.setOutputColor( getColorFromType( typeInput.getValue() ) );
 			element.setOutput( 1 );
