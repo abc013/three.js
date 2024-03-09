@@ -1,6 +1,6 @@
 import { LabelElement, Element, ButtonInput, StringInput, Loader } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
-import { NodeEditor } from '../NodeEditor.js';
+import { GroupNodeEditor } from '../NodeEditor.js';
 import { GroupInputEditor } from './GroupInputEditor.js';
 import { GroupOutputEditor } from './GroupOutputEditor.js';
 import { GroupEditor } from './GroupEditor.js';
@@ -16,10 +16,11 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		this.nameInput = new StringInput( "New Group" ).onChange( () => { this.updatePrototypes() } );
 
-		var showNodes = new ButtonInput( "Show Graph" ).onClick( () => { this.toggleNodeEditor() } );
+		const showNodes = new ButtonInput( "Show Graph" ).onClick( () => { this.toggleNodeEditor() } );
+		const refreshButton = new ButtonInput( "Refresh instances " ).setIcon( 'ti ti-reload' ).onClick( () => { this.updatePrototypes() } );
 
-		this.add( new LabelElement( "Name" ).add(this.nameInput) )
-			.add( new Element().add(showNodes) );
+		this.add( new LabelElement( "Name" ).add( this.nameInput ) )
+			.add( new Element().add( showNodes ).add( refreshButton ) );
 
 		this.nodeEditor = null;
 		this.nodeEditorJSON = null;
@@ -141,7 +142,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		const editor = this.editor;
 
-		const nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
+		const nodeEditor = new GroupNodeEditor( editor.scene, editor.renderer, editor.composer, editor, this );
 		document.body.appendChild( nodeEditor.domElement );
 
 		this.nodeEditor = nodeEditor;

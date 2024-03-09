@@ -3,7 +3,7 @@ import { BaseNodeEditor } from '../BaseNodeEditor.js';
 import { createElementFromJSON } from '../NodeEditorUtils.js';
 import { GroupInputEditor } from './GroupInputEditor.js';
 import { GroupOutputEditor } from './GroupOutputEditor.js';
-import { NodeEditor } from '../NodeEditor.js';
+import { GroupNodeEditor } from '../NodeEditor.js';
 import { setOutputAestheticsFromNode } from '../DataTypeLib.js';
 import { ClassLib } from '../NodeEditorLib.js';
 
@@ -50,7 +50,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 		if ( !this.nodeEditor ) {
 
-			this.nodeEditor = new NodeEditor( editor.scene, editor.renderer, editor.composer, true, editor );
+			this.nodeEditor = new GroupNodeEditor( editor.scene, editor.renderer, editor.composer, editor );
 
 		}
 
