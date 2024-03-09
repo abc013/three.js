@@ -11,7 +11,7 @@ Element.icons.unlink = 'ti ti-unlink';
 
 export class NodeEditor extends THREE.EventDispatcher {
 
-	constructor( scene = null, renderer = null, composer = null, startParameterless = false, parentalNodeEditor = null ) {
+	constructor( scene = null, renderer = null, composer = null ) {
 
 		super();
 
@@ -50,14 +50,13 @@ export class NodeEditor extends THREE.EventDispatcher {
 
 		this._initUpload();
 		this._initTips();
-		this._initMenu( parentalNodeEditor );
+		this._initMenu();
 		this._initSearch();
 		this._initNodesContext();
 		this._initExamplesContext();
 		this._initShortcuts();
+		this._initParams();
 
-		if (!startParameterless)
-			this._initParams();
 	}
 
 	setSize( width, height ) {
@@ -250,13 +249,7 @@ export class NodeEditor extends THREE.EventDispatcher {
 
 	}
 
-	_initMenu( parentalNodeEditor ) {
-
-		const menu = new CircleMenu();
-		const previewMenu = new CircleMenu();
-
-		menu.setAlign( 'top left' );
-		previewMenu.setAlign( 'top left' );
+	_getButtons() {
 
 		const previewButton = new ButtonInput().setIcon( 'ti ti-brand-threejs' ).setToolTip( 'Preview' );
 		const menuButton = new ButtonInput().setIcon( 'ti ti-apps' ).setToolTip( 'Add' );
@@ -315,34 +308,35 @@ export class NodeEditor extends THREE.EventDispatcher {
 			exportJSON( this.canvas.toJSON(), 'node_editor' );
 
 		} );
+		
+		return {
+			preview: previewButton,
+			new: newButton,
+			examples: examplesButton,
+			open: openButton,
+			save: saveButton,
+			menu: menuButton,
+			editor: editorButton
+		};
+	}
 
-		if ( parentalNodeEditor ) {
+	_initMenu() {
 
-			const visibilityButton = new ButtonInput().setIcon( 'ti ti-arrows-minimize' ).setToolTip( 'Exit Editor' );
+		const menu = new CircleMenu();
+		const previewMenu = new CircleMenu();
 
-			visibilityButton.onClick( () => {
+		menu.setAlign( 'top left' );
+		previewMenu.setAlign( 'top left' );
 
-				this.visible = false;
-				parentalNodeEditor.visible = true;
+		const buttons = this._getButtons();
 
-			} );
+		for ( const button of Object.values( buttons ) ) {
 
-			menu.add( previewButton )
-				.add( visibilityButton )
-				.add( menuButton );
-
-		} else {
-
-			menu.add( previewButton )
-				.add( newButton )
-				.add( examplesButton )
-				.add( openButton )
-				.add( saveButton )
-				.add( menuButton );
+			menu.add( button );
 
 		}
 
-		previewMenu.add( editorButton );
+		previewMenu.add( buttons.editor );
 
 		this.domElement.append( menu.dom );
 
@@ -825,6 +819,52 @@ export class NodeEditor extends THREE.EventDispatcher {
 		}
 
 		this.nodesContext = context;
+
+	}
+
+}
+
+export class GroupNodeEditor extends NodeEditor {
+
+	constructor( scene = null, renderer = null, composer = null, parentalNodeEditor = null, groupPrototype = null ) {
+
+        super( scene, renderer, composer );
+
+		this.parentalNodeEditor = parentalNodeEditor;
+		this.groupPrototype = groupPrototype;
+
+    }
+
+	_initParams() { }
+
+	_getButtons() {
+
+		let buttons = super._getButtons();
+
+		const visibilityButton = new ButtonInput().setIcon( 'ti ti-arrows-minimize' ).setToolTip( 'Exit Editor' );
+
+		visibilityButton.onClick( () => {
+
+			this.visible = false;
+			this.parentalNodeEditor.visible = true;
+
+		} );
+
+		const refreshButton = new ButtonInput().setIcon( 'ti ti-reload ' ).setToolTip( 'Refresh Group Nodes' );
+
+		refreshButton.onClick( () => {
+
+			if ( this.groupPrototype ) this.groupPrototype.updatePrototypes();
+
+		} );
+
+		return {
+			preview: buttons.preview,
+			visibility: visibilityButton,
+			refresh: refreshButton,
+			menu: buttons.menu,
+			editor: buttons.editor
+		};
 
 	}
 
