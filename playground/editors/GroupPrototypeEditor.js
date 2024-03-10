@@ -258,6 +258,10 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 			data.nodeEditorJSON = JSON.stringify( this.createNodeEditorJSON() );
 
+		} else if ( this.stringifiedNodeEditorJSON ) {
+
+			data.nodeEditorJSON = this.stringifiedNodeEditorJSON;
+
 		}
 
 		data.groupName = this.groupName;
@@ -268,6 +272,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		if (data.nodeEditorJSON) {
 
+			this.stringifiedNodeEditorJSON = data.nodeEditorJSON;
 			this.nodeEditorJSON = JSON.parse( data.nodeEditorJSON );
 
 		}
