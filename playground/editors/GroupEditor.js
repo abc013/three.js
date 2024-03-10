@@ -113,11 +113,12 @@ export class GroupEditor extends BaseNodeEditor {
 		element.setInput(1); // TODO: somehow, using inputConnection == true doesn't work, but this does...
 
 		// there has to be a corresponding field in the inputEditor elements
-		const inputEditorElement = !this.inputEditor ? null : this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
 
 		const updateInput = () => {
 
 			element.setEnabledInputs( ! element.getLinkedObject() );
+
+			const inputEditorElement = !this.inputEditor ? null : this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
 			if (inputEditorElement) inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
 
 			if (this.inputEditor) this.inputEditor.invalidate();
@@ -133,6 +134,17 @@ export class GroupEditor extends BaseNodeEditor {
 	}
 
 	setInputs( elements ) {
+
+		if (JSON.stringify(elements) === JSON.stringify(this.inputElementsJSON)) {
+
+			this.elements.forEach( (element) => {
+	
+				element.dispatchEvent( new Event( 'connect' ) );
+	
+			} );
+
+			return;
+		}
 
 		this.clearLayout();
 
