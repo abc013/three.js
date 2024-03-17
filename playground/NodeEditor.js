@@ -374,7 +374,7 @@ export class NodeEditor extends THREE.EventDispatcher {
 				subContext.add( new ButtonInput( name )
 					.setIcon( 'ti ti-file-symlink' )
 					.onClick( onClickExample )
-					.setExtra( category.toLowerCase() + '/' + filename )
+					.setExtra( category.replaceAll( ' ', '-' ).toLowerCase() + '/' + filename )
 				);
 
 			}
@@ -393,6 +393,11 @@ export class NodeEditor extends THREE.EventDispatcher {
 			'Teapot',
 			'Matcap',
 			'Fresnel'
+		] );
+
+		addExamples( 'Node Groups', [
+			'Cartoony Teapot',
+			'Brick Texture'
 		] );
 
 		if ( this.renderer.isWebGLRenderer ) {
@@ -471,7 +476,7 @@ export class NodeEditor extends THREE.EventDispatcher {
 
 		const urlParams = new URLSearchParams( window.location.search );
 
-		const example = urlParams.get( 'example' ) || 'universal/teapot';
+		const example = urlParams.get( 'example' ) || 'node-groups/cartoony-teapot';
 
 		this.loadURL( `./examples/${example}.json` );
 
