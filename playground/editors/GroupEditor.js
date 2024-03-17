@@ -128,6 +128,10 @@ export class GroupEditor extends BaseNodeEditor {
 		element.onConnect( () => updateInput(), true );
 		element.addEventListener( 'changeInput', () => this.invalidate() );
 
+		element.addEventListener( 'changeInput', () => { this.invalidate() } );
+		// does not equal
+		element.addEventListener( 'changeInput', this.invalidate );
+
 		this.add( element );
 
 		updateInput();
