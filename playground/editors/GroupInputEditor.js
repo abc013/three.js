@@ -37,12 +37,12 @@ export class GroupInputEditor extends BaseNodeEditor {
 	}
 
 	addParameterFromJSON( json ) {
-		// TODO: maybe, we have to outsource this element into its own class later. We'll see.
 		// JSON layout: { id?: <id>?, name: <name>, type: <type> }
 		const { name, type } = json;
 		const id = json.id ?? this.currentElementID;
 
-		this.currentElementID = (json.id > this.currentElementID ? json.id : this.currentElementID ) + 1; // TODO: always get the highest ID to prevent clashes
+		// always get the highest ID to prevent clashes
+		this.currentElementID = (json.id > this.currentElementID ? json.id : this.currentElementID ) + 1;
 
 		const nameInput = new StringInput( name ).onChange( () => {
 

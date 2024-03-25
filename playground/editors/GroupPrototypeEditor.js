@@ -108,8 +108,6 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		this.nodeEditor.visible = !this.nodeEditor.visible;
 		this.editor.visible = !this.nodeEditor.visible;
 
-		// if (this.editor.visible) this.updatePrototypes(); // TODO: We just closed the node editor, thus update Prototypes; However, this doesnt work from inside the editor
-
 	}
 
 	createNodeEditor() {
