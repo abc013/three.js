@@ -117,6 +117,9 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		this.inputEditor = new GroupInputEditor();
 		this.outputEditor = new GroupOutputEditor();
 
+		this.inputEditor.setPosition( 100, 360 );
+		this.outputEditor.setPosition( 1100, 360 );
+
 		this.nodeEditor.add( this.inputEditor );
 		this.nodeEditor.add( this.outputEditor );
 
