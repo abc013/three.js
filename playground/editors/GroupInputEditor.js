@@ -67,9 +67,10 @@ export class GroupInputEditor extends BaseNodeEditor {
 			element.attributeType = typeInput.getValue();
 			element.attributeValue = element.attributeType in inputNodeLib ? inputNodeLib[ element.attributeType ]() : null;
 
-			setOutputAestheticsFromType( element, type );
+			setOutputAestheticsFromType( element, element.attributeType );
 
-			// TODO: disconnect if required
+			// Reset connection; Sadly, due to the current architecture, it's not possible to only reset if the connection is invalid
+			element.dispose();
 
 			this.requestGroupPrototypeUpdate();
 
@@ -79,8 +80,9 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		const removeButton = new ButtonInput( "Remove " ).setIcon( 'ti ti-trash' ).onClick( () => {
 
+			element.dispose();
+
 			this.remove( element );
-			// TODO: we need to remove existing connections
 			this.requestGroupPrototypeUpdate();
 
 		} );
