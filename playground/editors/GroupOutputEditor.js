@@ -1,6 +1,6 @@
 import { Element, SelectInput } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
-import { createElementFromJSON, onValidNode } from '../NodeEditorUtils.js';
+import { createElementFromJSON, onValidType } from '../NodeEditorUtils.js';
 import { setInputAestheticsFromType } from '../DataTypeLib.js';
 
 export class GroupOutputEditor extends BaseNodeEditor {
@@ -18,6 +18,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 			{ name: "color", value: "color" },
 			{ name: "boolean", value: "bool" },
 			{ name: "anything", value: "any" },
+			{ name: "GPU node", value: "node" },
 			{ name: "nothing", value: "null" }
 		];
 
@@ -70,14 +71,13 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 		this.input = element;
 		this.inputNode = inputNode;
-
+		
 		element.onConnect( () => { this.updateConnection() }, true );
 		element.addEventListener( 'changeInput', () => { this.invalidate() } );
-
+		
         setInputAestheticsFromType( element, type );
-		element.onValid( onValidNode );
 
-
+		this.onValidElement = onValidType( type );
 		this.add( element );
 
 		if ( linkedObject ) {

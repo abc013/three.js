@@ -59,7 +59,8 @@ export class GroupInputEditor extends BaseNodeEditor {
 			{ name: "vec4", value: "vec4" },
 			{ name: "color", value: "color" },
 			{ name: "boolean", value: "bool" },
-			{ name: "anything", value: "any" }
+			{ name: "anything", value: "any" },
+			{ name: "GPU node", value: "node" }
 		];
 
 		const typeInput = new SelectInput().onChange( () => {

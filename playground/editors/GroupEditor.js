@@ -1,6 +1,6 @@
 import { Loader } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
-import { createElementFromJSON } from '../NodeEditorUtils.js';
+import { createElementFromJSON, onValidType } from '../NodeEditorUtils.js';
 import { GroupInputEditor } from './GroupInputEditor.js';
 import { GroupOutputEditor } from './GroupOutputEditor.js';
 import { GroupNodeEditor } from '../NodeEditor.js';
@@ -115,16 +115,22 @@ export class GroupEditor extends BaseNodeEditor {
 
 			element.setEnabledInputs( ! element.getLinkedObject() );
 
-			const inputEditorElement = !this.inputEditor ? null : this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
-			if (inputEditorElement) inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
+			if ( this.inputEditor ) {
 
-			if (this.inputEditor) this.inputEditor.invalidate();
+				const inputEditorElement = this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
+				if ( inputEditorElement ) inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
+
+				this.inputEditor.invalidate();
+
+			}
 
 		};
 
 		element.onConnect( () => updateInput(), true );
 		element.addEventListener( 'changeInput', () => this.invalidate() );
 
+		// we have to set this before adding the element such that it only accepts this specific type.
+		this.onValidElement = onValidType( type );
 		this.add( element );
 
 		updateInput();
