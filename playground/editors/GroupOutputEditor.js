@@ -10,19 +10,19 @@ export class GroupOutputEditor extends BaseNodeEditor {
 		super( 'Group Output', null, 350 );
 	
 		const types = [
-			{ name: "string", value: "string" },
-			{ name: "float", value: "float" },
-			{ name: "vec2", value: "vec2" },
-			{ name: "vec3", value: "vec3" },
-			{ name: "vec4", value: "vec4" },
-			{ name: "color", value: "color" },
-			{ name: "boolean", value: "bool" },
-			{ name: "anything", value: "any" },
-			{ name: "GPU node", value: "node" },
-			{ name: "nothing", value: "null" }
+			{ name: 'string', value: 'string' },
+			{ name: 'float', value: 'float' },
+			{ name: 'vec2', value: 'vec2' },
+			{ name: 'vec3', value: 'vec3' },
+			{ name: 'vec4', value: 'vec4' },
+			{ name: 'color', value: 'color' },
+			{ name: 'boolean', value: 'bool' },
+			{ name: 'anything', value: 'any' },
+			{ name: 'GPU node', value: 'node' },
+			{ name: 'nothing', value: 'null' }
 		];
 
-		const type = "any";
+		const type = 'any';
 
 		const typeInput = new SelectInput().onChange( () => {
 
@@ -56,7 +56,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 		}
 
-		if ( type == "null" ) {
+		if ( type == 'null' ) {
 
 			this.updateConnection();
 			return;
@@ -75,7 +75,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 		element.onConnect( () => { this.updateConnection() }, true );
 		element.addEventListener( 'changeInput', () => { this.invalidate() } );
 		
-        setInputAestheticsFromType( element, type );
+		setInputAestheticsFromType( element, type );
 
 		this.onValidElement = onValidType( type );
 		this.add( element );
@@ -90,11 +90,11 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 	}
 
-    isRemovable() {
+	isRemovable() {
 
-        return false;
+		return false;
 
-    }
+	}
 
 	attachGroupEditor( editor ) {
 
@@ -115,7 +115,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 		}
 
-		if (this.parentGroupEditor) this.parentGroupEditor.updateOutputs();
+		if ( this.parentGroupEditor ) this.parentGroupEditor.updateOutputs();
 
 	}
 
@@ -123,7 +123,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 		super.invalidate();
 
-		if (this.parentGroupEditor) this.parentGroupEditor.invalidate();
+		if ( this.parentGroupEditor ) this.parentGroupEditor.invalidate();
 
 	}
 

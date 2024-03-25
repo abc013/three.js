@@ -14,12 +14,12 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		this.nodeClass = new WeakMap();
 
-		this.nameInput = new StringInput( "New Group" ).onChange( () => { this.updatePrototypes() } );
+		this.nameInput = new StringInput( 'New Group' ).onChange( () => { this.updatePrototypes() } );
 
-		const showNodes = new ButtonInput( "Show Graph" ).onClick( () => { this.toggleNodeEditor() } );
-		const refreshButton = new ButtonInput( "Refresh instances " ).setIcon( 'ti ti-reload' ).onClick( () => { this.updatePrototypes() } );
+		const showNodes = new ButtonInput( 'Show Graph' ).onClick( () => { this.toggleNodeEditor() } );
+		const refreshButton = new ButtonInput( 'Refresh instances ' ).setIcon( 'ti ti-reload' ).onClick( () => { this.updatePrototypes() } );
 
-		this.add( new LabelElement( "Name" ).add( this.nameInput ) )
+		this.add( new LabelElement( 'Name' ).add( this.nameInput ) )
 			.add( new Element().add( showNodes ).add( refreshButton ) );
 
 		this.nodeEditor = null;
@@ -38,9 +38,9 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	}
 
-	set groupName(value) {
+	set groupName( value ) {
 
-		this.nameInput.setValue(value);
+		this.nameInput.setValue( value );
 
 	}
 
@@ -48,7 +48,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		super.deserializeLib( data, lib );
 
-		if (data.nodeEditorJSON) {
+		if ( data.nodeEditorJSON ) {
 
 			this.nodeEditorJSON = JSON.parse( data.nodeEditorJSON );
 
@@ -66,7 +66,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		if ( editor === null && this.editor ) {
 
 			// TODO: also add this to NodePrototypeEditor. This is required because otherwise, classes are saved over editor instances (and save/load cycles)
-			this.editor.removeClass(this.createPrototype());
+			this.editor.removeClass( this.createPrototype() );
 
 		}
 
@@ -235,7 +235,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		if ( this.editor ) {
 
 			this.editor.addClass( this.createPrototype() );
-			this.instances.forEach( (instance) => instance.update() );
+			this.instances.forEach( ( instance ) => { instance.update() } );
 
 		}
 
@@ -243,8 +243,11 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	createNodeEditorJSON() {
 
-		if (!this.nodeEditor)
+		if ( !this.nodeEditor ) {
+
 			return this.nodeEditorJSON;
+
+		}
 
 		this.nodeEditorJSON = this.nodeEditor.canvas.toJSON();
 		return this.nodeEditorJSON;
@@ -255,7 +258,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		super.serialize( data );
 
-		if (this.nodeEditor) {
+		if ( this.nodeEditor ) {
 
 			data.nodeEditorJSON = JSON.stringify( this.createNodeEditorJSON() );
 
@@ -271,7 +274,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	deserialize( data ) {
 
-		if (data.nodeEditorJSON) {
+		if ( data.nodeEditorJSON ) {
 
 			this.stringifiedNodeEditorJSON = data.nodeEditorJSON;
 			this.nodeEditorJSON = JSON.parse( data.nodeEditorJSON );

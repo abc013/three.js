@@ -828,12 +828,12 @@ export class GroupNodeEditor extends NodeEditor {
 
 	constructor( scene = null, renderer = null, composer = null, parentalNodeEditor = null, groupPrototype = null ) {
 
-        super( scene, renderer, composer );
+		super( scene, renderer, composer );
 
 		this.parentalNodeEditor = parentalNodeEditor;
 		this.groupPrototype = groupPrototype;
 
-    }
+	}
 
 	_initParams() { }
 

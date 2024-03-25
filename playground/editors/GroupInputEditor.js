@@ -9,9 +9,9 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		super( 'Group Inputs', null, 300 );
 
-		const button = new ButtonInput( "Add Input" ).onClick( () => {
+		const button = new ButtonInput( 'Add Input' ).onClick( () => {
 
-			this.addParameterFromJSON({ name: "unnamed input", type: "float", });
+			this.addParameterFromJSON({ name: 'unnamed input', type: 'float', });
 			this.requestGroupPrototypeUpdate();
 	
 		} );
@@ -23,11 +23,11 @@ export class GroupInputEditor extends BaseNodeEditor {
 		this.currentElementID = 0;
 	}
 
-    isRemovable() {
+	isRemovable() {
 
-        return false;
+		return false;
 
-    }
+	}
 
 	attachGroupEditor( editor ) {
 
@@ -42,7 +42,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 		const id = json.id ?? this.currentElementID;
 
 		// always get the highest ID to prevent clashes
-		this.currentElementID = (json.id > this.currentElementID ? json.id : this.currentElementID ) + 1;
+		this.currentElementID = ( json.id > this.currentElementID ? json.id : this.currentElementID ) + 1;
 
 		const nameInput = new StringInput( name ).onChange( () => {
 
@@ -52,15 +52,15 @@ export class GroupInputEditor extends BaseNodeEditor {
 		} );
 	
 		const types = [
-			{ name: "string", value: "string" },
-			{ name: "float", value: "float" },
-			{ name: "vec2", value: "vec2" },
-			{ name: "vec3", value: "vec3" },
-			{ name: "vec4", value: "vec4" },
-			{ name: "color", value: "color" },
-			{ name: "boolean", value: "bool" },
-			{ name: "anything", value: "any" },
-			{ name: "GPU node", value: "node" }
+			{ name: 'string', value: 'string' },
+			{ name: 'float', value: 'float' },
+			{ name: 'vec2', value: 'vec2' },
+			{ name: 'vec3', value: 'vec3' },
+			{ name: 'vec4', value: 'vec4' },
+			{ name: 'color', value: 'color' },
+			{ name: 'boolean', value: 'bool' },
+			{ name: 'anything', value: 'any' },
+			{ name: 'GPU node', value: 'node' }
 		];
 
 		const typeInput = new SelectInput().onChange( () => {
@@ -79,7 +79,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		typeInput.setOptions( types );
 
-		const removeButton = new ButtonInput( "Remove " ).setIcon( 'ti ti-trash' ).onClick( () => {
+		const removeButton = new ButtonInput( 'Remove ' ).setIcon( 'ti ti-trash' ).onClick( () => {
 
 			element.dispose();
 
@@ -103,7 +103,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		};
 
-		element.setObjectCallback(getObjectCallback);
+		element.setObjectCallback( getObjectCallback );
 
 		this.add( element );
 
@@ -162,7 +162,11 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 	requestGroupPrototypeUpdate() {
 
-		if (this.parentGroupEditor) this.parentGroupEditor.setInputs( this.generateElementsJSON() );
+		if ( this.parentGroupEditor ) {
+			
+			this.parentGroupEditor.setInputs( this.generateElementsJSON() );
+
+		}
 
 	}
 

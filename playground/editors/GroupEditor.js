@@ -39,7 +39,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 		this.nodeEditorJSON = this.groupPrototype.createNodeEditorJSON();
 
-		if (!this.nodeEditorJSON) {
+		if ( !this.nodeEditorJSON ) {
 
 			this.invalidate();
 			return;
@@ -138,9 +138,9 @@ export class GroupEditor extends BaseNodeEditor {
 
 	setInputs( elements ) {
 
-		if (JSON.stringify(elements) === JSON.stringify(this.inputElementsJSON)) {
+		if ( JSON.stringify( elements ) === JSON.stringify( this.inputElementsJSON ) ) {
 
-			this.elements.forEach( (element) => {
+			this.elements.forEach( ( element ) => {
 	
 				element.dispatchEvent( new Event( 'connect' ) );
 	
@@ -151,7 +151,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 		this.clearLayout();
 
-		elements.forEach( (element) => {
+		elements.forEach( ( element ) => {
 
 			this.addInputFromJSON( element );
 
