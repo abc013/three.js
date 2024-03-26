@@ -99,23 +99,29 @@ export class GroupOutputEditor extends BaseNodeEditor {
 	attachGroupEditor( editor ) {
 
 		this.parentGroupEditor = editor;
+		this.updateConnection();
 
 	}
 
 	updateConnection() {
 
-		if ( !this.input ) {
+		var value = null;
 
-			this.output = null;
-
-		} else {
+		if ( this.input ) {
 
 			this.input.setEnabledInputs( ! this.input.getLinkedObject() );
-			this.output = this.input.getLinkedObject() ?? this.inputNode;
+			value = this.input.getLinkedObject() ?? this.inputNode;
 
 		}
 
-		if ( this.parentGroupEditor ) this.parentGroupEditor.updateOutputs();
+		if ( this.parentGroupEditor ) {
+	
+			const type = this.typeInput.getValue();
+			this.parentGroupEditor.setOutput( type, value );
+
+		}
+
+		this.invalidate();
 
 	}
 

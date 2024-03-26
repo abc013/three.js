@@ -4,7 +4,7 @@ import { createElementFromJSON, onValidType } from '../NodeEditorUtils.js';
 import { GroupInputEditor } from './GroupInputEditor.js';
 import { GroupOutputEditor } from './GroupOutputEditor.js';
 import { GroupNodeEditor } from '../NodeEditor.js';
-import { setOutputAestheticsFromNode } from '../DataTypeLib.js';
+import { setOutputAestheticsFromType } from '../DataTypeLib.js';
 import { ClassLib } from '../NodeEditorLib.js';
 
 export class GroupEditor extends BaseNodeEditor {
@@ -85,7 +85,6 @@ export class GroupEditor extends BaseNodeEditor {
 		if ( editor ) {
 
 			this.outputEditor.attachGroupEditor( this );
-			this.updateOutputs();
 
 		}
 
@@ -93,10 +92,11 @@ export class GroupEditor extends BaseNodeEditor {
 
 	}
 
-	updateOutputs() {
+	setOutput( type, value ) {
 
-		this.value = this.outputEditor.output;
-		setOutputAestheticsFromNode( this.title, this.value );
+		this.value = value;
+		setOutputAestheticsFromType( this.title, type );
+
 		this.invalidate();
 
 	}
@@ -118,22 +118,30 @@ export class GroupEditor extends BaseNodeEditor {
 			if ( this.inputEditor ) {
 
 				const inputEditorElement = this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
-				if ( inputEditorElement ) inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
+				if ( inputEditorElement ) {
+					
+					inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
 
-				this.inputEditor.invalidate();
+					// only invalidate the specific element we are changing
+					inputEditorElement.dispatchEvent( new Event( 'connect' ) );
+
+				}
 
 			}
 
 		};
 
 		element.onConnect( () => updateInput(), true );
-		element.addEventListener( 'changeInput', () => this.invalidate() );
 
-		// we have to set this before adding the element such that it only accepts this specific type.
+		// this is required for *MaterialEditors to get updated
+		element.addEventListener( 'changeInput', () => updateInput() );
+
+		// we have to set this before adding the element such that it only accepts the specific type.
 		this.onValidElement = onValidType( type );
 		this.add( element );
 
 		updateInput();
+
 	}
 
 	setInputs( elements ) {

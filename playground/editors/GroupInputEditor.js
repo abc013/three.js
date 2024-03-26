@@ -70,8 +70,8 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 			setOutputAestheticsFromType( element, element.attributeType );
 
-			// Reset connection; Sadly, due to the current architecture, it's not possible to only reset if the connection is invalid
-			element.dispose();
+			// TODO: Reset connection; Sadly, due to the current architecture, it's not possible to only reset if the connection is invalid)
+			// element.dispose();
 
 			this.requestGroupPrototypeUpdate();
 
