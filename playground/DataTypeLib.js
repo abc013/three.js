@@ -1,3 +1,15 @@
+export const nameToTypeList = [
+	{ name: 'string', value: 'string' },
+	{ name: 'float', value: 'float' },
+	{ name: 'vec2', value: 'vec2' },
+	{ name: 'vec3', value: 'vec3' },
+	{ name: 'vec4', value: 'vec4' },
+	{ name: 'color', value: 'color' },
+	{ name: 'boolean', value: 'bool' },
+	{ name: 'anything', value: 'any' },
+	{ name: 'GPU node', value: 'node' }
+]
+
 export const typeToLengthLib = {
 	// gpu
 	string: 1,

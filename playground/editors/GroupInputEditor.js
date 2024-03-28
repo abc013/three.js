@@ -1,7 +1,7 @@
 import { Element, ButtonInput, StringInput, SelectInput } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
 import { inputNodeLib } from '../NodeEditorUtils.js';
-import { setOutputAestheticsFromType } from '../DataTypeLib.js';
+import { nameToTypeList, setOutputAestheticsFromType } from '../DataTypeLib.js';
 
 export class GroupInputEditor extends BaseNodeEditor {
 
@@ -50,18 +50,6 @@ export class GroupInputEditor extends BaseNodeEditor {
 			this.requestGroupPrototypeUpdate();
 
 		} );
-	
-		const types = [
-			{ name: 'string', value: 'string' },
-			{ name: 'float', value: 'float' },
-			{ name: 'vec2', value: 'vec2' },
-			{ name: 'vec3', value: 'vec3' },
-			{ name: 'vec4', value: 'vec4' },
-			{ name: 'color', value: 'color' },
-			{ name: 'boolean', value: 'bool' },
-			{ name: 'anything', value: 'any' },
-			{ name: 'GPU node', value: 'node' }
-		];
 
 		const typeInput = new SelectInput().onChange( () => {
 
@@ -77,7 +65,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		} );
 
-		typeInput.setOptions( types );
+		typeInput.setOptions( nameToTypeList );
 
 		const removeButton = new ButtonInput( 'Remove ' ).setIcon( 'ti ti-trash' ).onClick( () => {
 

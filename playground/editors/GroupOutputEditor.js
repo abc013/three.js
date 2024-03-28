@@ -1,7 +1,7 @@
 import { Element, SelectInput } from 'flow';
 import { BaseNodeEditor } from '../BaseNodeEditor.js';
 import { createElementFromJSON, onValidType } from '../NodeEditorUtils.js';
-import { setInputAestheticsFromType } from '../DataTypeLib.js';
+import { nameToTypeList, setInputAestheticsFromType } from '../DataTypeLib.js';
 
 export class GroupOutputEditor extends BaseNodeEditor {
 
@@ -10,15 +10,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 		super( 'Group Output', null, 350 );
 	
 		const types = [
-			{ name: 'string', value: 'string' },
-			{ name: 'float', value: 'float' },
-			{ name: 'vec2', value: 'vec2' },
-			{ name: 'vec3', value: 'vec3' },
-			{ name: 'vec4', value: 'vec4' },
-			{ name: 'color', value: 'color' },
-			{ name: 'boolean', value: 'bool' },
-			{ name: 'anything', value: 'any' },
-			{ name: 'GPU node', value: 'node' },
+			... nameToTypeList,
 			{ name: 'nothing', value: 'null' }
 		];
 
