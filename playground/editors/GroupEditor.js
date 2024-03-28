@@ -4,7 +4,7 @@ import { createElementFromJSON, onValidType } from '../NodeEditorUtils.js';
 import { GroupInputEditor } from './GroupInputEditor.js';
 import { GroupOutputEditor } from './GroupOutputEditor.js';
 import { GroupNodeEditor } from '../NodeEditor.js';
-import { setOutputAestheticsFromType } from '../DataTypeLib.js';
+import { setOutputAestheticsFromType, setOutputAestheticsFromNode } from '../DataTypeLib.js';
 import { ClassLib } from '../NodeEditorLib.js';
 
 export class GroupEditor extends BaseNodeEditor {
@@ -95,7 +95,16 @@ export class GroupEditor extends BaseNodeEditor {
 	setOutput( type, value ) {
 
 		this.value = value;
-		setOutputAestheticsFromType( this.title, type );
+
+		if ( value ) {
+
+			setOutputAestheticsFromNode( this.title, value );
+
+		} else {
+
+			setOutputAestheticsFromType( this.title, type );
+
+		}
 
 		this.invalidate();
 
