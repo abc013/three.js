@@ -77,7 +77,8 @@ export class GroupOutputEditor extends BaseNodeEditor {
 		
 		setInputAestheticsFromType( element, type );
 
-		this.onValidElement = onValidType( type );
+		// if any is the type, we have to specifically set onValidElement for that
+		this.onValidElement = onValidType( type == 'any' ? type : 'node' );
 		this.add( element );
 
 		if ( linkedObject ) {

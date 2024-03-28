@@ -136,8 +136,8 @@ export class GroupEditor extends BaseNodeEditor {
 		// this is required for *MaterialEditors to get updated
 		element.addEventListener( 'changeInput', () => updateInput() );
 
-		// we have to set this before adding the element such that it only accepts the specific type.
-		this.onValidElement = onValidType( type );
+		// if any is the type, we have to specifically set onValidElement for that
+		this.onValidElement = onValidType( type == 'any' ? type : 'node' );
 		this.add( element );
 
 		updateInput();
