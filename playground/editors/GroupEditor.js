@@ -140,6 +140,9 @@ export class GroupEditor extends BaseNodeEditor {
 
 		};
 
+		element.attributeName = name;
+		element.attributeID = id;
+
 		element.onConnect( () => updateInput(), true );
 
 		// this is required for *MaterialEditors to get updated
@@ -151,39 +154,68 @@ export class GroupEditor extends BaseNodeEditor {
 
 		updateInput();
 
+		return element;
+
 	}
 
-	setInputs( elements ) {
+	updateInputs( elements ) {
 
-		if ( JSON.stringify( elements ) === JSON.stringify( this.inputElementsJSON ) ) {
+		const currentElementsLength = this.inputElementsJSON ? this.inputElementsJSON.length : 0;
 
-			this.elements.forEach( ( element ) => {
-	
+		var indexInElements = 0;
+
+		for (var i = 0; i < currentElementsLength; i++) {
+
+			const currentJSON = this.inputElementsJSON[ i ];
+			const newJSON = elements[ indexInElements ];
+			var element = this.elements.find( ( element ) => { return element.attributeID == this.inputElementsJSON[ i ].id; } );
+
+			if ( currentJSON.id == newJSON.id ) {
+
+				indexInElements++;
+
+				if ( currentJSON.type != newJSON.type || currentJSON.name != newJSON.name ) {
+
+					const oldElement = element;
+					element.dispose();
+
+					element.removeEventListener( 'connect', this._onConnect );
+					element.removeEventListener( 'connectChildren', this._onConnectChildren );
+
+					element = this.addInputFromJSON( newJSON );
+
+					this.elements.splice( this.elements.indexOf( element ), 1 );
+					this.dom.removeChild( element.dom );
+
+					this.elements[ this.elements.indexOf( oldElement ) ] = element;
+					this.dom.replaceChild( element.dom, oldElement.dom );
+
+				}
+
 				element.dispatchEvent( new Event( 'connect' ) );
-	
-			} );
 
-			return;
+			} else {
+
+				this.remove( element );
+
+			}
+
 		}
 
-		this.clearLayout();
+		for (var i = indexInElements; i < elements.length; i++) {
 
-		elements.forEach( ( element ) => {
+			this.addInputFromJSON( elements[ i ] );
 
-			this.addInputFromJSON( element );
-
-		} );
+		}
 
 		this.inputElementsJSON = elements;
 	}
 
 	clearLayout() {
 
-		this.currentElementID = 0;
-
 		for ( const element of this.elements.concat() ) {
 
-			if ( element !== this.buttonElement && element !== this.title ) {
+			if ( element !== this.title ) {
 
 				this.remove( element );
 
@@ -203,7 +235,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 	deserialize( data ) {
 
-		this.setInputs( data.inputElementsJSON || JSON.parse( '[]' ) );
+		this.updateInputs( data.inputElementsJSON || JSON.parse( '[]' ) );
 
 		super.deserialize( data );
 

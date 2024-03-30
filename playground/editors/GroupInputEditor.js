@@ -152,7 +152,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		if ( this.parentGroupEditor ) {
 			
-			this.parentGroupEditor.setInputs( this.generateElementsJSON() );
+			this.parentGroupEditor.updateInputs( this.generateElementsJSON() );
 
 		}
 
