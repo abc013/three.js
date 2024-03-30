@@ -65,8 +65,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		if ( editor === null && this.editor ) {
 
-			// TODO: also add this to NodePrototypeEditor. This is required because otherwise, classes are saved over editor instances (and save/load cycles)
-			this.editor.removeClass( this.createPrototype() );
+			this.editor.removeClass( this._prototype );
 
 		}
 
