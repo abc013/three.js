@@ -8,7 +8,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 	constructor() {
 
 		super( 'Group Output', null, 350 );
-	
+
 		const types = [
 			... nameToTypeList,
 			{ name: 'nothing', value: 'null' }
@@ -63,10 +63,10 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 		this.input = element;
 		this.inputNode = inputNode;
-		
+
 		element.onConnect( () => { this.updateConnection() }, true );
 		element.addEventListener( 'changeInput', () => { this.invalidate() } );
-		
+
 		setInputAestheticsFromType( element, type );
 
 		// if any is the type, we have to specifically set onValidElement for that
@@ -108,7 +108,7 @@ export class GroupOutputEditor extends BaseNodeEditor {
 		}
 
 		if ( this.parentGroupEditor ) {
-	
+
 			const type = this.typeInput.getValue();
 			this.parentGroupEditor.setOutput( type, value );
 

@@ -90,7 +90,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	toggleNodeEditor() {
 
-		if ( !this.nodeEditor ) {
+		if ( ! this.nodeEditor ) {
 
 			if ( this.nodeEditorJSON ) {
 
@@ -103,10 +103,11 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 			}
 
 			this.nodeEditor.visible = false;
+
 		}
 
-		this.nodeEditor.visible = !this.nodeEditor.visible;
-		this.editor.visible = !this.nodeEditor.visible;
+		this.nodeEditor.visible = ! this.nodeEditor.visible;
+		this.editor.visible = ! this.nodeEditor.visible;
 
 	}
 
@@ -130,7 +131,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 		this._createNodeEditor();
 
 		const loader = new Loader( Loader.OBJECTS );
-		const json = loader.parse( this.nodeEditorJSON , ClassLib );
+		const json = loader.parse( this.nodeEditorJSON, ClassLib );
 
 		this.nodeEditor.loadJSON( json );
 
@@ -152,9 +153,9 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 			const width = window.innerWidth;
 			const height = window.innerHeight;
-	
+
 			this.nodeEditor.setSize( width, height );
-	
+
 		};
 
 		onWindowResize();
@@ -230,8 +231,6 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 		}
 
-		//
-
 		if ( this.editor ) {
 
 			this.editor.addClass( this.createPrototype() );
@@ -243,7 +242,7 @@ export class GroupPrototypeEditor extends BaseNodeEditor {
 
 	createNodeEditorJSON() {
 
-		if ( !this.nodeEditor ) {
+		if ( ! this.nodeEditor ) {
 
 			return this.nodeEditorJSON;
 

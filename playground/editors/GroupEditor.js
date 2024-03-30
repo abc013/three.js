@@ -129,7 +129,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 				const inputEditorElement = this.inputEditor.elements.find( ( obj ) => obj.attributeID == id );
 				if ( inputEditorElement ) {
-					
+
 					inputEditorElement.attributeValue = element.getLinkedObject() ?? inputNode;
 
 					// only invalidate the specific element we are changing

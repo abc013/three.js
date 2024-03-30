@@ -13,7 +13,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 			this.addParameterFromJSON({ name: 'unnamed input', type: 'float', });
 			this.requestGroupPrototypeUpdate();
-	
+
 		} );
 
 		this.buttonElement = new Element().add( button );
@@ -120,7 +120,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 	requestGroupPrototypeUpdate() {
 
 		if ( this.parentGroupEditor ) {
-			
+
 			this.parentGroupEditor.updateInputs( this.generateElementsJSON() );
 
 		}
