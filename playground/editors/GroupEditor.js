@@ -4,7 +4,7 @@ import { createElementFromJSON, onValidType } from '../NodeEditorUtils.js';
 import { GroupInputEditor } from './GroupInputEditor.js';
 import { GroupOutputEditor } from './GroupOutputEditor.js';
 import { GroupNodeEditor } from '../NodeEditor.js';
-import { setOutputAestheticsFromType, setOutputAestheticsFromNode } from '../DataTypeLib.js';
+import { setInputAestheticsFromType, setOutputAestheticsFromType, setOutputAestheticsFromNode } from '../DataTypeLib.js';
 import { ClassLib } from '../NodeEditorLib.js';
 
 export class GroupEditor extends BaseNodeEditor {
@@ -37,9 +37,9 @@ export class GroupEditor extends BaseNodeEditor {
 
 		this.setName( this.groupPrototype.groupName );
 
-		this.nodeEditorJSON = this.groupPrototype.createNodeEditorJSON();
+		const nodeEditorJSON = this.groupPrototype.createNodeEditorJSON();
 
-		if ( !this.nodeEditorJSON ) {
+		if ( ! nodeEditorJSON ) {
 
 			this.invalidate();
 			return;
@@ -55,7 +55,7 @@ export class GroupEditor extends BaseNodeEditor {
 		}
 
 		const loader = new Loader( Loader.OBJECTS );
-		const json = loader.parse( this.nodeEditorJSON , ClassLib );
+		const json = loader.parse( nodeEditorJSON , ClassLib );
 
 		this.nodeEditor.loadJSON( json );
 
@@ -116,7 +116,8 @@ export class GroupEditor extends BaseNodeEditor {
 
 		const { element, inputNode } = createElementFromJSON( {
 			name: name,
-			inputType: type
+			inputType: type,
+			inputConnection: false
 		} );
 
 		// there has to be a corresponding field in the inputEditor elements
@@ -144,6 +145,8 @@ export class GroupEditor extends BaseNodeEditor {
 		element.attributeID = id;
 
 		element.onConnect( () => updateInput(), true );
+
+		setInputAestheticsFromType( element, type );
 
 		// this is required for *MaterialEditors to get updated
 		element.addEventListener( 'changeInput', () => updateInput() );
@@ -174,7 +177,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 		var indexInElements = 0;
 
-		for (var i = 0; i < currentElementsLength; i++) {
+		for ( var i = 0; i < currentElementsLength; i++ ) {
 
 			const currentJSON = this.inputElementsJSON[ i ];
 			const newJSON = elements[ indexInElements ];
@@ -208,13 +211,14 @@ export class GroupEditor extends BaseNodeEditor {
 
 		}
 
-		for (var i = indexInElements; i < elements.length; i++) {
+		for ( var i = indexInElements; i < elements.length; i++ ) {
 
 			this.addInputFromJSON( elements[ i ] );
 
 		}
 
 		this.inputElementsJSON = elements;
+
 	}
 
 	serialize( data ) {
