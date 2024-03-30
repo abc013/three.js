@@ -12,7 +12,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 		const button = new ButtonInput( 'Add Input' ).onClick( () => {
 
 			this.addParameterFromJSON({ name: 'unnamed input', type: 'float', });
-			this.requestGroupPrototypeUpdate();
+			this.updateGroupEditor();
 
 		} );
 
@@ -32,7 +32,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 	attachGroupEditor( editor ) {
 
 		this.parentGroupEditor = editor;
-		this.requestGroupPrototypeUpdate();
+		this.updateGroupEditor();
 
 	}
 
@@ -47,7 +47,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 		const nameInput = new StringInput( name ).onChange( () => {
 
 			element.attributeName = nameInput.getValue();
-			this.requestGroupPrototypeUpdate();
+			this.updateGroupEditor();
 
 		} );
 
@@ -61,7 +61,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 			// TODO: Reset connection; Sadly, due to the current architecture, it's not possible to only reset if the connection is invalid)
 			// element.dispose();
 
-			this.requestGroupPrototypeUpdate();
+			this.updateGroupEditor();
 
 		} );
 
@@ -72,7 +72,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 			element.dispose();
 
 			this.remove( element );
-			this.requestGroupPrototypeUpdate();
+			this.updateGroupEditor();
 
 		} );
 
@@ -117,7 +117,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 	}
 
-	requestGroupPrototypeUpdate() {
+	updateGroupEditor() {
 
 		if ( this.parentGroupEditor ) {
 
@@ -131,7 +131,7 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 		super.invalidate();
 
-		for ( const element of this.elements.concat() ) {
+		for ( const element of this.elements ) {
 
 			if ( element !== this.buttonElement && element !== this.title ) {
 
@@ -153,9 +153,9 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 	deserialize( data ) {
 
-		this.elementsJSON = data.elementsJSON || JSON.parse( '[]' );
+		const elementsJSON = data.elementsJSON || JSON.parse( '[]' );
 
-		for ( const element of this.elementsJSON ) {
+		for ( const element of elementsJSON ) {
 
 			this.addParameterFromJSON( element );
 

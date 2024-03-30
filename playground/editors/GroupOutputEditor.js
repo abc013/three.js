@@ -33,8 +33,6 @@ export class GroupOutputEditor extends BaseNodeEditor {
 
 	generateInput( type ) {
 
-		if ( type == this.inputType ) return;
-
 		let linkedObject = null;
 		if ( this.input ) {
 
