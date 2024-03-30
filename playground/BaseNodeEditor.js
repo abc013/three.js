@@ -145,6 +145,14 @@ export class BaseNodeEditor extends Node {
 
 	}
 
+	replace( element, newElement ) {
+
+		newElement.onValid( ( source, target ) => this.onValidElement( source, target ) );
+
+		return super.replace( element, newElement );
+
+	}
+
 	setName( value ) {
 
 		this.title.setTitle( value );

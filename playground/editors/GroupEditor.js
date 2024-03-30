@@ -110,7 +110,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 	}
 
-	addInputFromJSON( json ) {
+	createInputFromJSON( json ) {
 		// JSON layout: { id: <id>, name: <name>, type: <type> }
 		const { id, name, type } = json;
 
@@ -140,7 +140,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 		};
 
-		element.attributeName = name;
+		// used for smart updating of the elements
 		element.attributeID = id;
 
 		element.onConnect( () => updateInput(), true );
@@ -148,11 +148,21 @@ export class GroupEditor extends BaseNodeEditor {
 		// this is required for *MaterialEditors to get updated
 		element.addEventListener( 'changeInput', () => updateInput() );
 
+		return element;
+
+	}
+
+	addInputFromJSON( json ) {
+		// JSON layout: { id: <id>, name: <name>, type: <type> }
+		const { type } = json;
+
+		const element = this.createInputFromJSON( json );
+
 		// if any is the type, we have to specifically set onValidElement for that
 		this.onValidElement = onValidType( type == 'any' ? type : 'node' );
 		this.add( element );
 
-		updateInput();
+		element.dispatchEvent( new Event( 'connect' ) );
 
 		return element;
 
@@ -168,6 +178,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 			const currentJSON = this.inputElementsJSON[ i ];
 			const newJSON = elements[ indexInElements ];
+
 			var element = this.elements.find( ( element ) => { return element.attributeID == this.inputElementsJSON[ i ].id; } );
 
 			if ( currentJSON.id == newJSON.id ) {
@@ -176,19 +187,14 @@ export class GroupEditor extends BaseNodeEditor {
 
 				if ( currentJSON.type != newJSON.type || currentJSON.name != newJSON.name ) {
 
+					const { type } = newJSON;
 					const oldElement = element;
-					element.dispose();
 
-					element.removeEventListener( 'connect', this._onConnect );
-					element.removeEventListener( 'connectChildren', this._onConnectChildren );
+					element = this.createInputFromJSON( newJSON );
 
-					element = this.addInputFromJSON( newJSON );
-
-					this.elements.splice( this.elements.indexOf( element ), 1 );
-					this.dom.removeChild( element.dom );
-
-					this.elements[ this.elements.indexOf( oldElement ) ] = element;
-					this.dom.replaceChild( element.dom, oldElement.dom );
+					// if any is the type, we have to specifically set onValidElement for that
+					this.onValidElement = onValidType( type == 'any' ? type : 'node' );
+					this.replace( oldElement, element );
 
 				}
 

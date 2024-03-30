@@ -1628,6 +1628,28 @@ class Node extends Serializer {
 
 	}
 
+	// TODO: this code has to get into flow.js first
+	replace( element, newElement ) {
+
+		newElement.node = this;
+		newElement.addEventListener( 'connect', this._onConnect );
+		newElement.addEventListener( 'connectChildren', this._onConnectChildren );
+
+		element.node = null;
+		element.removeEventListener( 'connect', this._onConnect );
+		element.removeEventListener( 'connectChildren', this._onConnectChildren );
+
+		element.dispose();
+
+		this.elements[ this.elements.indexOf( element ) ] = newElement;
+		this.dom.replaceChild( newElement.dom, element.dom );
+
+		this.updateSize();
+
+		return this;
+
+	}
+
 	dispose() {
 
 		const canvas = this.canvas;
