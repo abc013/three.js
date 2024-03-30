@@ -99,37 +99,6 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 	}
 
-	useLayout( elements ) {
-
-		this.clearLayout();
-
-		for ( const element of elements ) {
-
-			this.addParameterFromJSON( element );
-
-		}
-
-		this.elementsJSON = elements;
-
-		this.requestGroupPrototypeUpdate();
-	}
-
-	clearLayout() {
-
-		this.currentElementID = 0;
-
-		for ( const element of this.elements.concat() ) {
-
-			if ( element !== this.buttonElement && element !== this.title ) {
-
-				this.remove( element );
-
-			}
-
-		}
-
-	}
-
 	generateElementsJSON() {
 
 		var elements = []
@@ -184,7 +153,13 @@ export class GroupInputEditor extends BaseNodeEditor {
 
 	deserialize( data ) {
 
-		this.useLayout( data.elementsJSON || JSON.parse( '[]' ), true );
+		this.elementsJSON = data.elementsJSON || JSON.parse( '[]' );
+
+		for ( const element of this.elementsJSON ) {
+
+			this.addParameterFromJSON( element );
+
+		}
 
 		super.deserialize( data );
 

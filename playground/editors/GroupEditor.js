@@ -217,20 +217,6 @@ export class GroupEditor extends BaseNodeEditor {
 		this.inputElementsJSON = elements;
 	}
 
-	clearLayout() {
-
-		for ( const element of this.elements.concat() ) {
-
-			if ( element !== this.title ) {
-
-				this.remove( element );
-
-			}
-
-		}
-
-	}
-
 	serialize( data ) {
 
 		super.serialize( data );
