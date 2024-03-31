@@ -29,6 +29,8 @@ export class GroupOutputEditor extends BaseNodeEditor {
 		typeInput.setOptions( types );
 		typeInput.setValue( type );
 
+		this.cachedValue = null;
+
 	}
 
 	generateInput( type ) {
@@ -90,11 +92,11 @@ export class GroupOutputEditor extends BaseNodeEditor {
 	attachGroupEditor( editor ) {
 
 		this.parentGroupEditor = editor;
-		this.updateConnection();
+		this.updateConnection( true );
 
 	}
 
-	updateConnection() {
+	updateConnection( force = false ) {
 
 		var value = null;
 
@@ -104,6 +106,15 @@ export class GroupOutputEditor extends BaseNodeEditor {
 			value = this.input.getLinkedObject() ?? this.inputNode;
 
 		}
+
+		// don't need to update the whole graph if value stays the same
+		if ( this.cachedValue === value && ! force ) {
+
+			return;
+
+		}
+
+		this.cachedValue = value;
 
 		if ( this.parentGroupEditor ) {
 
