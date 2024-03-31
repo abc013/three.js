@@ -96,7 +96,7 @@ export class GroupEditor extends BaseNodeEditor {
 
 		this.value = value;
 
-		if ( value ) {
+		if ( value && ( type === 'node' || type === 'any' ) ) {
 
 			setOutputAestheticsFromNode( this.title, value );
 
